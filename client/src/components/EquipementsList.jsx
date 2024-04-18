@@ -34,25 +34,6 @@ const EquipementsList = () => {
       console.error(error.message);
     }
   }
-  // async function searchByName(name) {
-  //   try {
-  //     const response = await fetch(
-  //       `http://localhost:4000/agents/search/${name}`,
-  //       {
-  //         method: "GET",
-  //         headers: { "Content-type": "application/json" },
-  //       }
-  //     );
-  //     const parsedData = await response.json();
-  //     setAgents(parsedData);
-  //   } catch (error) {
-  //     console.error(error.message);
-  //   }
-  // }
-  // const handleDateChange = (date) => {
-  //   setSelectedDate(date);
-  // };
-
   async function fetchEquipementByType() {
     try {
       if (selectedType === "Filtre par type" || selectedType === "") {
@@ -87,6 +68,9 @@ const EquipementsList = () => {
       console.error(error);
     }
   }
+  const handleDetailsClick = (e, id) => {
+    navigate(`/equipements/details/${id}`);
+  };
 
   const handleEditClick = (e, id) => {
     e.stopPropagation();
@@ -96,12 +80,15 @@ const EquipementsList = () => {
   const handleDelete = async (e, id) => {
     e.stopPropagation();
     try {
-      await fetch(`http://localhost:4000/equipements/delete/${id}`, {
-        method: "DELETE",
-        headers: { "Content-type": "application/json" },
-      });
-
-      toast.error("Equipement supprimé avec succès");
+      const response = await fetch(
+        `http://localhost:4000/equipements/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-type": "application/json" },
+        }
+      );
+      const parseData = await response.json();
+      toast.success(parseData);
     } catch (error) {
       console.log(error.message);
     }
@@ -160,62 +147,96 @@ const EquipementsList = () => {
         </div>
       </div>
 
-      <table className="table table-hover table-dark">
-        <thead>
-          <tr className="table-primary">
-            <th scope="col">Numero de Lot</th>
-            <th scope="col">Modèle</th>
-            <th scope="col">Type</th>
-            <th scope="col">Agent</th>
-            <th scope="col">Date d'acquisition</th>
-            <th scope="col">Date d'affectation</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          {equipements &&
-            equipements.map((equipement) => {
-              return (
-                <tr key={equipement.num_lot}>
-                  <td>{equipement.num_lot}</td>
-                  <td>{equipement.modele}</td>
-                  <td>{equipement.type}</td>
-                  <td className={equipement.agent ? "" : "text-warning"}>
-                    {equipement.agent ?? "Pas Affecté"}
-                  </td>
-                  <td>
-                    {moment(equipement.dateaquisition).format("YYYY-MM-DD")}
-                  </td>
-                  <td
-                    className={equipement.dateaffectation ? "" : "text-warning"}
-                  >
-                    {equipement.dateaffectation
-                      ? moment(equipement.dateaffectation).format("YYYY-MM-DD")
-                      : "Pas Affecté"}
-                  </td>
+      {equipements.length === 0 ? (
 
-                  <td>
-                    <button
-                      className="btn btn-warning"
-                      onClick={(e) => handleEditClick(e, equipement.num_lot)}
+        <h3 className="text-center mt-5">Pas d'équipements ajoutés</h3>
+      ) : (
+        <table className="table table-hover table-dark">
+          <thead>
+            <tr className="table-primary">
+              <th scope="col">Numero d'inventaire</th>
+              <th scope="col">SN</th>
+              <th scope="col">Modèle</th>
+              <th scope="col">Type</th>
+              <th scope="col">Agent</th>
+              <th scope="col">Date d'acquisition</th>
+              <th scope="col">Date d'affectation</th>
+              <th scope="col" style={{ width: "120px" }}>
+                Etat
+              </th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            {equipements &&
+              equipements.map((equipement) => {
+                return (
+                  <tr
+                    onClick={(e) =>
+                      handleDetailsClick(e, equipement.num_inventaire)
+                    }
+                    key={equipement.num_inventaire}
+                  >
+                    <td>{equipement.num_inventaire}</td>
+                    <td>{equipement.sn}</td>
+                    <td>{equipement.modele}</td>
+                    <td>{equipement.type}</td>
+                    <td className={equipement.agent ? "" : "text-warning"}>
+                      {equipement.agent ?? "Pas Affecté"}
+                    </td>
+                    <td>
+                      {moment(equipement.dateaquisition).format("YYYY-MM-DD")}
+                    </td>
+                    <td
+                      className={
+                        equipement.dateaffectation ? "" : "text-warning"
+                      }
                     >
-                      <i className="bi bi-pencil-square"></i>
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      onClick={(e) => handleDelete(e, equipement.num_lot)}
-                      className="btn btn-danger"
-                    >
-                      <i className="bi bi-trash-fill"></i>
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table>
+                      {equipement.dateaffectation
+                        ? moment(equipement.dateaffectation).format(
+                            "YYYY-MM-DD"
+                          )
+                        : "Pas Affecté"}
+                    </td>
+                    <td>
+                      <div
+                        className={
+                          equipement.etat === "Actif"
+                            ? "btn btn-success"
+                            : "btn btn-danger"
+                        }
+                      >
+                        {equipement.etat}
+                      </div>
+                    </td>
+
+                    <td>
+                      <button
+                        className="btn btn-warning"
+                        onClick={(e) =>
+                          handleEditClick(e, equipement.num_inventaire)
+                        }
+                      >
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        onClick={(e) =>
+                          handleDelete(e, equipement.num_inventaire)
+                        }
+                        className="btn btn-danger"
+                      >
+                        <i className="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 };

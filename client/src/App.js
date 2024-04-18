@@ -11,6 +11,8 @@ import LoginPage from "./routes/LoginPage";
 import HomePage from "./routes/HomePage";
 import UpdateAgentPage from "./routes/UpdateAgentPage";
 import UpdateEquipementPage from "./routes/UpdateEquipementPage";
+import EquipementDetailsPage from "./routes/EquipementDetailsPage";
+import AgentDetailsPage from "./routes/AgentDetailsPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -69,10 +71,28 @@ function App() {
           />
           <Route
             exact
+            path="/agents/details/:id"
+            element={
+              isAuthenticated ? <AgentDetailsPage /> : <Navigate to="/login" />
+            }
+          />
+          <Route
+            exact
             path="/equipements/update/:id"
             element={
               isAuthenticated ? (
                 <UpdateEquipementPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/equipements/details/:id"
+            element={
+              isAuthenticated ? (
+                <EquipementDetailsPage />
               ) : (
                 <Navigate to="/login" />
               )

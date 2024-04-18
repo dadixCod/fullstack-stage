@@ -7,7 +7,7 @@ const AgentsComp = () => {
     <div className="container d-grid">
       <h1 className="text-center">Agents</h1>
       <AddAgentForm></AddAgentForm>
-      
+
       <AgentsList></AgentsList>
     </div>
   );

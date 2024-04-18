@@ -5,16 +5,43 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const AddEquipementForm = () => {
   const [types, setTypes] = useState([]);
+  const [etats, setEtats] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [selectedType, setSelectedType] = useState("Type");
+  const [selectedEtat, setSelectedEtat] = useState("Etat");
+  const [type, setType] = useState("");
+  const [addTypeClicked, setAddTypeClicked] = useState(false);
+  const onSubmitType = async (e) => {
+    e.preventDefault();
+    try {
+      const body = {
+        type,
+      };
+      const response = await fetch(`http://localhost:4000/types/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const parseData = await response.json();
+      if (parseData.newType) {
+        toast.success(parseData.message);
+        setAddTypeClicked(false);
+        setType("");
+      } else {
+        toast.error(parseData.message);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   const [inputs, setInputs] = useState({
+    sn: "",
     modele: "",
-    type: "",
-    dateaquisition: "",
+    valeur: "",
   });
-  const { modele, type, dateaquisition } = inputs;
+  const { sn, modele, valeur } = inputs;
   const onChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
@@ -31,6 +58,18 @@ const AddEquipementForm = () => {
       console.error(error.message);
     }
   }
+  async function fetchEtats() {
+    try {
+      const response = await fetch("http://localhost:4000/etats", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const parseDate = await response.json();
+      setEtats(parseDate);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
   // const handleDateChange = (date) => {
   //   setSelectedDate(date);
   // };
@@ -39,9 +78,12 @@ const AddEquipementForm = () => {
     e.preventDefault();
     try {
       const body = {
+        sn,
         modele,
         id_type: selectedType,
         dateaquisition: selectedDate,
+        valeur,
+        id_etat: selectedEtat,
       };
       const response = await fetch(`http://localhost:4000/equipements/add`, {
         method: "POST",
@@ -52,10 +94,12 @@ const AddEquipementForm = () => {
       if (parseData.newEquipement) {
         toast.success(parseData.message);
         setInputs({
+          sn: "",
           modele: "",
-          type: "",
-          dateaquisition: "",
+          valeur: "",
         });
+        setSelectedEtat("Etat");
+        setSelectedType("Type");
       } else {
         toast.error(parseData.message);
       }
@@ -67,6 +111,9 @@ const AddEquipementForm = () => {
   useEffect(() => {
     fetchTypes();
   }, [types]);
+  useEffect(() => {
+    fetchEtats();
+  }, [etats]);
 
   return (
     <div className="mb-4 d-flex justify-content-between align-items-center">
@@ -95,6 +142,20 @@ const AddEquipementForm = () => {
                 <div className="row my-3">
                   <div className="col">
                     <div className="form-group">
+                      <label htmlFor="modele">Numéro de série</label>
+                      <input
+                        className="form-control"
+                        value={sn}
+                        onChange={(e) => onChange(e)}
+                        type="text"
+                        name="sn"
+                        id="sn"
+                        placeholder="SN"
+                      />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
                       <label htmlFor="modele">Modèle</label>
                       <input
                         className="form-control"
@@ -107,25 +168,77 @@ const AddEquipementForm = () => {
                       />
                     </div>
                   </div>
+                </div>
+                <div className="row mb-3">
                   <div className="col">
                     <div className="form-group">
                       <label htmlFor="type">Type</label>
-                      <select
-                        value={selectedType}
-                        onChange={(e) => setSelectedType(e.target.value)}
-                        className="form-select"
-                        name="type"
-                      >
-                        <option disabled>Type</option>
-                        {types &&
-                          types.map((type) => {
-                            return (
-                              <option key={type.id_type} value={type.id_type}>
-                                {type.type}
-                              </option>
-                            );
-                          })}
-                      </select>
+                      <div className="d-flex align-items-center ">
+                        <select
+                          value={selectedType}
+                          onChange={(e) => setSelectedType(e.target.value)}
+                          className="form-select"
+                          name="type"
+                        >
+                          <option disabled>Type</option>
+                          {types &&
+                            types.map((type) => {
+                              return (
+                                <option key={type.id_type} value={type.id_type}>
+                                  {type.type}
+                                </option>
+                              );
+                            })}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={(e) => setAddTypeClicked(true)}
+                          className="btn btn-primary ms-2"
+                        >
+                          <span className="fw-bold">+</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  {addTypeClicked ? (
+                    <div className="form-group mt-2">
+                      <div className="d-flex align-items-center mb-2">
+                        <input
+                          value={type}
+                          onChange={(e) => setType(e.target.value)}
+                          className="form-control"
+                          type="text"
+                          placeholder="Ajouter un type"
+                        />
+                        <button
+                          onClick={(e) => onSubmitType(e)}
+                          className="btn btn-success ms-2"
+                        >
+                          <i className="bi bi-check2-all"></i>
+                        </button>
+                        <button
+                          onClick={(e) => setAddTypeClicked(false)}
+                          className="btn btn-danger ms-2"
+                        >
+                          <i class="bi bi-x"></i>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+                  <div className="col">
+                    <div className="form-group">
+                      <label htmlFor="dateacq">Valeur (en DA)</label>
+                      <input
+                        className="form-control"
+                        value={valeur}
+                        onChange={(e) => onChange(e)}
+                        type="text"
+                        name="valeur"
+                        id="valeur"
+                        placeholder="34330"
+                      />
                     </div>
                   </div>
                 </div>
@@ -141,6 +254,27 @@ const AddEquipementForm = () => {
                           dateFormat="yyyy-MM-dd"
                         />
                       </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <label htmlFor="etat">Etat</label>
+                      <select
+                        value={selectedEtat}
+                        onChange={(e) => setSelectedEtat(e.target.value)}
+                        className="form-select"
+                        name="etat"
+                      >
+                        <option disabled>Etat</option>
+                        {etats &&
+                          etats.map((etat) => {
+                            return (
+                              <option key={etat.id_etat} value={etat.id_etat}>
+                                {etat.etat}
+                              </option>
+                            );
+                          })}
+                      </select>
                     </div>
                   </div>
                 </div>

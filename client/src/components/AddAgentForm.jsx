@@ -5,6 +5,45 @@ const AddAgentForm = () => {
   const [directions, setDirections] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedSousdirection, setSelectedSousdirection] = useState("");
+  const [bureuax, setBureaux] = useState([]);
+  const [selectedBureau, setSelectedBureau] = useState("Bureau");
+  const [addBureauClicked, setAddBureauClicked] = useState(false);
+  const [bureau, setBureau] = useState("");
+  const onBureauAddClicked = async (e) => {
+    e.preventDefault();
+    try {
+      const body = {
+        bureau,
+      };
+      const response = await fetch(`http://localhost:4000/bureaux/add`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const parseData = await response.json();
+      if (parseData.newBureau) {
+        toast.success(parseData.message);
+        setAddBureauClicked(false);
+        setBureau("");
+      } else {
+        toast.error(parseData.message);
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  async function fetchBureaux() {
+    try {
+      const response = await fetch("http://localhost:4000/bureaux", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const parseData = await response.json();
+      setBureaux(parseData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
   const [inputs, setInputs] = useState({
     nom: "",
@@ -12,8 +51,9 @@ const AddAgentForm = () => {
     fonction: "",
     id_sousdirection: "",
     id_service: "Services",
+    id_bureau: "",
   });
-  const { nom, prenom, fonction, id_sousdirection, id_service } = inputs;
+  const { nom, prenom, fonction, id_service } = inputs;
   const onChange = (e) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
@@ -66,6 +106,7 @@ const AddAgentForm = () => {
         fonction,
         id_sousdirection: selectedSousdirection,
         id_service,
+        id_bureau: selectedBureau,
       };
       const response = await fetch(`http://localhost:4000/agents/add`, {
         method: "POST",
@@ -92,23 +133,26 @@ const AddAgentForm = () => {
     fetchDirections();
     fetchEquipements();
   }, []);
+  useEffect(() => {
+    fetchBureaux();
+  }, [bureuax]);
   useEffect(() => {}, [selectedSousdirection]);
   useEffect(() => {
     fetchSubServices(selectedSousdirection);
   }, [selectedSousdirection]);
   return (
     <div className="mb-4 d-flex justify-content-between align-items-center">
-      
-
       <div
         className="modal fade"
         id="addAgentModal"
+        // data-bs-backdrop="static"
+        // data-bs-keyboard="false"
         tabIndex="-1"
         aria-labelledby="addAgentModalLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
-          <div className="modal-content">
+          <div className="modal-content" style={{ width: "600px" }}>
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="addAgentModalLabel">
                 Ajouter un agent
@@ -217,6 +261,65 @@ const AddAgentForm = () => {
                         id="fonction"
                         placeholder="Fonction"
                       />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="form-group">
+                      <label htmlFor="fonction">Bureau</label>
+                      <div className="d-flex align-items-center">
+                        <select
+                          className="form-select"
+                          value={selectedBureau}
+                          onChange={(e) => setSelectedBureau(e.target.value)}
+                        >
+                          <option disabled>Bureau</option>
+                          {bureuax &&
+                            bureuax.map((bureau) => {
+                              return (
+                                <option
+                                  key={bureau.id_bureau}
+                                  value={bureau.id_bureau}
+                                >
+                                  {bureau.bureau}
+                                </option>
+                              );
+                            })}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={(e) => setAddBureauClicked(true)}
+                          className="btn btn-primary ms-2"
+                        >
+                          <span className="fw-bold">+</span>
+                        </button>
+                      </div>
+                      {addBureauClicked ? (
+                        <div className="form-group mt-2">
+                          <div className="d-flex align-items-center">
+                            <input
+                              value={bureau}
+                              onChange={(e) => setBureau(e.target.value)}
+                              className="form-control"
+                              type="text"
+                              placeholder="Ajouter un bureau"
+                            />
+                            <button
+                              onClick={(e) => onBureauAddClicked(e)}
+                              className="btn btn-success ms-2"
+                            >
+                              <i className="bi bi-check2-all"></i>
+                            </button>
+                            <button
+                              onClick={(e) => setAddBureauClicked(false)}
+                              className="btn btn-danger ms-2"
+                            >
+                              <i class="bi bi-x"></i>
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </div>

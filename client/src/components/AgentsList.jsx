@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import AddBureauForm from "./AddBureauForm";
 
 const AgentsList = () => {
   const [agents, setAgents] = useState([]);
@@ -39,6 +40,10 @@ const AgentsList = () => {
     e.stopPropagation();
     navigate(`/agents/update/${id}`);
   };
+  const handleDetails = (e, id) => {
+    e.stopPropagation();
+    navigate(`/agents/details/${id}`);
+  };
 
   const handleDelete = async (e, id) => {
     e.stopPropagation();
@@ -68,6 +73,7 @@ const AgentsList = () => {
   }, [search, agents]);
   return (
     <div>
+      <AddBureauForm />
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="col">
           <input
@@ -78,7 +84,7 @@ const AgentsList = () => {
             placeholder="Recherche par nom"
           />
         </div>
-        
+
         <div className="col-auto mx-2">
           <button
             type="button"
@@ -98,7 +104,7 @@ const AgentsList = () => {
             <th scope="col">Fonction</th>
             <th scope="col">Sous direction</th>
             <th scope="col">Service</th>
-            <th scope="col">Equipement</th>
+            <th scope="col">Bureau</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
           </tr>
@@ -107,15 +113,17 @@ const AgentsList = () => {
           {agents &&
             agents.map((agent) => {
               return (
-                <tr key={agent.id_agent}>
+                <tr
+                  onClick={(e) => handleDetails(e, agent.id_agent)}
+                  key={agent.id_agent}
+                >
                   <td>{agent.nom}</td>
                   <td>{agent.prenom}</td>
                   <td>{agent.fonction}</td>
                   <td>{agent.sousdirection}</td>
                   <td>{agent.service}</td>
-                  <td className={agent.equipement ? "" : "text-warning"}>
-                    {agent.equipement ?? "Aucun équipement"}
-                  </td>
+                  <td>{agent.bureau}</td>
+
                   <td>
                     <button
                       className="btn btn-warning"

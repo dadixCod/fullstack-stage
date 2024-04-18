@@ -1,24 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import AddBureauForm from "./AddBureauForm";
 
 const AgentEditForm = () => {
   const { id } = useParams();
   let navigate = useNavigate();
   const [directions, setDirections] = useState([]);
   const [services, setServices] = useState([]);
-  const [equipements, setEquipements] = useState([]);
+  
   const [selectedSousdirection, setSelectedSousdirection] = useState("");
+  const [bureuax, setBureaux] = useState([]);
+  const [selectedBureau, setSelectedBureau] = useState("");
   const [inputs, setInputs] = useState({
     nom: "",
     prenom: "",
     fonction: "",
     id_sousdirection: "",
     id_service: "",
-    id_equipement: "",
+    id_bureau: "",
   });
-  const { nom, prenom, fonction, id_sousdirection, id_service, id_equipement } =
-    inputs;
+  const { nom, prenom, fonction, id_service } = inputs;
   async function fetchUser() {
     try {
       const response = await fetch(`http://localhost:4000/agents/${id}`, {
@@ -32,9 +34,23 @@ const AgentEditForm = () => {
         fonction: agent.fonction,
         id_sousdirection: agent.id_sousdirection,
         id_service: agent.id_service,
-        
+        id_bureau: agent.id_bureau,
       });
       setSelectedSousdirection(agent.id_sousdirection);
+      setSelectedBureau(agent.id_bureau);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  async function fetchBureaux() {
+    try {
+      const response = await fetch("http://localhost:4000/bureaux", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const parseData = await response.json();
+      setBureaux(parseData);
     } catch (error) {
       console.error(error.message);
     }
@@ -54,18 +70,7 @@ const AgentEditForm = () => {
       console.error(error.message);
     }
   }
-  async function fetchEquipements() {
-    try {
-      const response = await fetch("http://localhost:4000/equipements", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const equipements = await response.json();
-      setEquipements(equipements);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
+
   async function fetchSubServices(id) {
     try {
       const response = await fetch(
@@ -91,7 +96,7 @@ const AgentEditForm = () => {
         fonction,
         id_sousdirection: selectedSousdirection,
         id_service,
-      
+        id_bureau: selectedBureau,
       };
       const response = await fetch(
         `http://localhost:4000/agents/update/${id}`,
@@ -114,9 +119,11 @@ const AgentEditForm = () => {
   useEffect(() => {
     fetchUser();
     fetchDirections();
-
-    fetchEquipements();
   }, []);
+  useEffect(() => {
+    fetchBureaux();
+  }, [bureuax]);
+  useEffect(() => {}, [selectedBureau]);
   useEffect(() => {}, [selectedSousdirection]);
   useEffect(() => {
     fetchSubServices(selectedSousdirection);
@@ -124,6 +131,7 @@ const AgentEditForm = () => {
 
   return (
     <div className="card mx-auto my-4 shadow" style={{ width: 600 }}>
+      <AddBureauForm></AddBureauForm>
       <form onSubmit={onSubmitForm} className="mx-3">
         <div className="row my-3">
           <div className="col">
@@ -217,7 +225,35 @@ const AgentEditForm = () => {
               />
             </div>
           </div>
-          
+          <div className="col">
+            <div className="form-group">
+              <label htmlFor="fonction">Bureau</label>
+              <div className="d-flex align-items-center">
+                <select
+                  className="form-select"
+                  value={selectedBureau}
+                  onChange={(e) => setSelectedBureau(e.target.value)}
+                >
+                  {bureuax &&
+                    bureuax.map((bureau) => {
+                      return (
+                        <option key={bureau.id_bureau} value={bureau.id_bureau}>
+                          {bureau.bureau}
+                        </option>
+                      );
+                    })}
+                </select>
+                <button
+                  type="button"
+                  data-bs-toggle="modal"
+                  data-bs-target="#addBureauForm"
+                  className="btn btn-primary ms-2"
+                >
+                  <span className="fw-bold">+</span>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="d-grid my-4">

@@ -30,6 +30,15 @@ app.use("/equipements", require("./routes/equipements"));
 //Sous directions route
 app.use("/sousdirections", require("./routes/sousdirections"));
 
+//Bureaux route
+app.use("/bureaux", require("./routes/bureaux"));
+
+//Etats route
+app.use("/etats", require("./routes/etats"));
+
+//Affectation route
+app.use("/affectation", require("./routes/affectation"));
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server started on port : ${port}`);
