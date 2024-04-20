@@ -178,7 +178,7 @@ const EquipementsList = () => {
         <table className="table table-hover table-dark">
           <thead>
             <tr className="table-primary">
-              <th scope="col">Numero d'inventaire</th>
+              <th scope="col">N° d'inventaire</th>
               <th scope="col">SN</th>
               <th scope="col">Modèle</th>
               <th scope="col">Type</th>
@@ -188,8 +188,8 @@ const EquipementsList = () => {
               <th scope="col" style={{ width: "120px" }}>
                 Etat
               </th>
-              <th scope="col">Edit</th>
-              <th scope="col">Delete</th>
+              <th scope="col">Modifier</th>
+              <th scope="col">Supprimer</th>
             </tr>
           </thead>
           <tbody>

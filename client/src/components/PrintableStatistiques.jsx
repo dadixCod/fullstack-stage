@@ -40,7 +40,7 @@ const PrintableStatistiques = () => {
       </button>
       <div ref={componentRef} style={{ width: "90%" }}>
         <div className="mt-5 mb-5">
-            <h3 className="text-center">Statistiques des équipements :</h3>
+          <h3 className="text-center">Statistiques des équipements :</h3>
         </div>
         <table className="table table-hover table-light table-bordered ms-5 ">
           <thead>
@@ -63,7 +63,7 @@ const PrintableStatistiques = () => {
             {data &&
               data.map((equipement) => {
                 return (
-                  <tr>
+                  <tr key={equipement.type}>
                     <td className="text-center">{equipement.type}</td>
                     <td className="text-center">{equipement.quantity}</td>
                     <td className="text-center">{equipement.actif}</td>

@@ -124,13 +124,13 @@ const AgentsList = () => {
         <thead>
           <tr className="table-primary">
             <th scope="col">Nom</th>
-            <th scope="col">Prenom</th>
+            <th scope="col">Prénom</th>
             <th scope="col">Fonction</th>
             <th scope="col">Sous direction</th>
             <th scope="col">Service</th>
             <th scope="col">Bureau</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
+            <th scope="col">Modifier</th>
+            <th scope="col">Supprimer</th>
           </tr>
         </thead>
         <tbody>

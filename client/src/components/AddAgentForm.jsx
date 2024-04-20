@@ -4,7 +4,8 @@ import { toast } from "react-toastify";
 const AddAgentForm = ({ fetchAgents, fetchBureaux, bureaux }) => {
   const [directions, setDirections] = useState([]);
   const [services, setServices] = useState([]);
-  const [selectedSousdirection, setSelectedSousdirection] = useState("");
+  const [selectedSousdirection, setSelectedSousdirection] =
+    useState("Sous directions");
 
   const [selectedBureau, setSelectedBureau] = useState("Bureau");
   const [addBureauClicked, setAddBureauClicked] = useState(false);
@@ -128,7 +129,9 @@ const AddAgentForm = ({ fetchAgents, fetchBureaux, bureaux }) => {
   }, []);
   useEffect(() => {}, [selectedSousdirection]);
   useEffect(() => {
-    fetchSubServices(selectedSousdirection);
+    if (selectedSousdirection !== "Sous directions") {
+      fetchSubServices(selectedSousdirection);
+    }
   }, [selectedSousdirection]);
   return (
     <div className="mb-4 d-flex justify-content-between align-items-center">
@@ -303,7 +306,7 @@ const AddAgentForm = ({ fetchAgents, fetchBureaux, bureaux }) => {
                               onClick={(e) => setAddBureauClicked(false)}
                               className="btn btn-danger ms-2"
                             >
-                              <i class="bi bi-x"></i>
+                              <i className="bi bi-x"></i>
                             </button>
                           </div>
                         </div>
