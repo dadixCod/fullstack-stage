@@ -13,6 +13,7 @@ import UpdateAgentPage from "./routes/UpdateAgentPage";
 import UpdateEquipementPage from "./routes/UpdateEquipementPage";
 import EquipementDetailsPage from "./routes/EquipementDetailsPage";
 import AgentDetailsPage from "./routes/AgentDetailsPage";
+import UpdateAffectationPage from "./routes/UpdateAffectationPage";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -93,6 +94,17 @@ function App() {
             element={
               isAuthenticated ? (
                 <EquipementDetailsPage />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/affectations/details/:num_affectation"
+            element={
+              isAuthenticated ? (
+                <UpdateAffectationPage />
               ) : (
                 <Navigate to="/login" />
               )

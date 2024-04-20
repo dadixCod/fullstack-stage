@@ -1,17 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteType = () => {
-  const [type, setType] = useState("Type");
+const EditType = () => {
+  const [id_type, setIdType] = useState("Type");
+  const [newType, setNewType] = useState("");
   const [types, setTypes] = useState([]);
-  async function deleteType(id) {
+
+  async function editType(newType) {
     try {
-      const response = await fetch(`http://localhost:4000/types/delete/${id}`, {
-        method: "DELETE",
-        headers: { "Content-type": "application/json" },
-      });
+      const body = { type: newType };
+      const response = await fetch(
+        `http://localhost:4000/types/update/${id_type}`,
+        {
+          method: "PUT",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
       const parseData = await response.json();
-      toast.success(parseData.message);
+      if (parseData.updated) {
+        toast.success(parseData.message);
+        setNewType("");
+        setIdType("Type");
+      } else {
+        toast.error(parseData);
+      }
     } catch (error) {
       console.error(error);
     }
@@ -33,19 +46,19 @@ const DeleteType = () => {
     fetchTypes();
   }, []);
   return (
-    <div className="d-flex justify-content-between align-items-center">
+    <div className=" d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="deleType"
+        id="editTypeForm"
         tabIndex="-1"
-        aria-labelledby="deleTypeLabel"
+        aria-labelledby="editTypeFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="deleType">
-                Supprimer un type
+              <h1 className="modal-title fs-5" id="editTypeForm">
+                Editer un type
               </h1>
               <button
                 type="button"
@@ -64,8 +77,8 @@ const DeleteType = () => {
                       </label>
                       <select
                         className="form-select"
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
+                        value={id_type}
+                        onChange={(e) => setIdType(e.target.value)}
                       >
                         <option disabled>Type</option>
                         {types &&
@@ -80,6 +93,22 @@ const DeleteType = () => {
                     </div>
                   </div>
                 </div>
+                <div className="row my-3">
+                  <div className="col">
+                    <div className="form-group">
+                      <label className="mb-2" htmlFor="modele">
+                        Nouveau Type
+                      </label>
+                      <input
+                        value={newType}
+                        className="form-control"
+                        type="text"
+                        onChange={(e) => setNewType(e.target.value)}
+                        placeholder="Nouveau Type"
+                      />
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
             <div className="modal-footer">
@@ -91,12 +120,12 @@ const DeleteType = () => {
                 Fermer
               </button>
               <button
-                onClick={(e) => deleteType(type)}
+                onClick={(e) => editType(newType)}
                 data-bs-dismiss="modal"
                 type="button"
-                className="btn btn-danger"
+                className="btn btn-warning"
               >
-                Supprimer
+                Editer
               </button>
             </div>
           </div>
@@ -106,4 +135,4 @@ const DeleteType = () => {
   );
 };
 
-export default DeleteType;
+export default EditType;

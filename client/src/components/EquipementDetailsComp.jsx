@@ -97,6 +97,17 @@ const EquipementDetailsComp = () => {
           <hr />
           <MDBRow>
             <MDBCol sm="3">
+              <MDBCardText>Bureau</MDBCardText>
+            </MDBCol>
+            <MDBCol sm="9">
+              <MDBCardText className="text-muted">
+                {equipement.bureau ?? "Pas affecté"}
+              </MDBCardText>
+            </MDBCol>
+          </MDBRow>
+          <hr />
+          <MDBRow>
+            <MDBCol sm="3">
               <MDBCardText>Date d'acquisition</MDBCardText>
             </MDBCol>
             <MDBCol sm="9">

@@ -19,7 +19,7 @@ const SousDirectionsRow = () => {
   }
   useEffect(() => {
     fetchSousDirections();
-  }, [sousDirections]);
+  }, []);
 
   return (
     <div className="card text-bg-light">
@@ -48,7 +48,7 @@ const SousDirectionsRow = () => {
             type="button"
             className="btn btn-success col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#addServiceForm"
+            data-bs-target="#addSousDirectionForm"
           >
             Ajouter une Sous Direction
           </button>
@@ -58,7 +58,7 @@ const SousDirectionsRow = () => {
             type="button"
             className="btn btn-warning col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#deleType"
+            data-bs-target="#updateSousDirectionForm"
           >
             Modifier une Sous Direction
           </button>
@@ -68,7 +68,7 @@ const SousDirectionsRow = () => {
             type="button"
             className="btn btn-danger col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#deleType"
+            data-bs-target="#deleteSousDirectionForm"
           >
             Supprimer une Sous Direction
           </button>

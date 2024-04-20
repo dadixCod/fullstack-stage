@@ -1,35 +1,23 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const AddTypeForm = () => {
-  const [type, setType] = useState("");
-  async function fetchTypes() {
-    try {
-      const response = await fetch(`http://localhost:4000/types`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseDate = await response.json();
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
+const AddSousDirectionForm = () => {
+  const [sousdirection, setSousDirection] = useState("");
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
       const body = {
-        type,
+        sousdirection,
       };
-      const response = await fetch(`http://localhost:4000/types/add`, {
+      const response = await fetch(`http://localhost:4000/sousdirections/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const parseData = await response.json();
-      if (parseData.newType) {
+      if (parseData.newSousDirection) {
         toast.success(parseData.message);
-        setType("");
-        fetchTypes();
+        setSousDirection("");
       } else {
         toast.error(parseData.message);
       }
@@ -41,16 +29,16 @@ const AddTypeForm = () => {
     <div className="mb-4 d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="addTypeForm"
+        id="addSousDirectionForm"
         tabIndex="-1"
-        aria-labelledby="addTypeFormLabel"
+        aria-labelledby="addSousDirectionFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="addTypeForm">
-                Ajouter un type
+              <h1 className="modal-title fs-5" id="addSousDirectionForm">
+                Ajouter une Sous Direction
               </h1>
               <button
                 type="button"
@@ -64,15 +52,15 @@ const AddTypeForm = () => {
                 <div className="row my-3">
                   <div className="col">
                     <div className="form-group">
-                      <label htmlFor="modele">Type</label>
+                      <label htmlFor="sousdirection">Sous Direction</label>
                       <input
                         className="form-control"
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
+                        value={sousdirection}
+                        onChange={(e) => setSousDirection(e.target.value)}
                         type="text"
-                        name="type"
-                        id="type"
-                        placeholder="Type"
+                        name="sousdirection"
+                        id="sousdirection"
+                        placeholder="Sous Direction"
                       />
                     </div>
                   </div>
@@ -103,4 +91,4 @@ const AddTypeForm = () => {
   );
 };
 
-export default AddTypeForm;
+export default AddSousDirectionForm;

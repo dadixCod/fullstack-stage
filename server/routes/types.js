@@ -8,6 +8,7 @@ router.get("/", async (req, res) => {
   try {
     const types = await pool.query("SELECT * FROM types ");
     res.status(200).json(types.rows);
+    console.log("Called");
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server Error");
@@ -64,9 +65,12 @@ router.put("/update/:id", async (req, res) => {
         [type, id]
       );
 
-      res.status(200).json(updatedType.rows[0]);
+      res.status(200).json({
+        message: "Type modifié avec succès",
+        updated: updatedType.rows[0],
+      });
     } else {
-      return res.json("Type est vide");
+      res.json("Type est vide");
     }
   } catch (error) {
     console.error(error.message);

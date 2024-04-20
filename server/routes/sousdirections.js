@@ -37,9 +37,14 @@ router.post("/add", async (req, res) => {
         [sousdirection]
       );
 
-      res.status(200).json(newSousDirection.rows[0]);
+      res.status(200).json({
+        message: "Nouvelle Sous Direction ajoutée avec succès",
+        newSousDirection: newSousDirection.rows[0],
+      });
     } else {
-      return res.json("Sous direction est vide");
+      res.json({
+        message: "Sous direction est vide",
+      });
     }
   } catch (error) {
     console.error(error.message);
@@ -60,9 +65,14 @@ router.put("/update/:id", async (req, res) => {
         [sousdirection, id]
       );
 
-      res.status(200).json(updatedSousDirection.rows[0]);
+      res.status(200).json({
+        message: "Sous Direction mis à jour avec succès",
+        updated: updatedSousDirection.rows[0],
+      });
     } else {
-      return res.json("Sous direction est vide");
+      res.json({
+        message: "Sous direction est vide",
+      });
     }
   } catch (error) {
     console.error(error.message);
@@ -81,12 +91,13 @@ router.delete("/delete/:id", async (req, res) => {
     if (sousdirection.rows.length === 0) {
       return res.status(404).json("Sousdirection non trouvé");
     }
-    res.status(200).json("Sousdirection supprimé avec succès");
+    res.status(200).json({
+      message:"Sousdirection supprimé avec succès"
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server Error");
   }
 });
-
 
 module.exports = router;

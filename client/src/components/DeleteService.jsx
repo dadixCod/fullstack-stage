@@ -1,51 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteType = () => {
-  const [type, setType] = useState("Type");
-  const [types, setTypes] = useState([]);
-  async function deleteType(id) {
+const DeleteService = () => {
+  const [selectedService, setSelectedService] = useState("Service");
+  const [services, setServices] = useState("");
+
+  async function deleteService() {
     try {
-      const response = await fetch(`http://localhost:4000/types/delete/${id}`, {
-        method: "DELETE",
-        headers: { "Content-type": "application/json" },
-      });
+      const response = await fetch(
+        `http://localhost:4000/services/delete/${selectedService}`,
+        {
+          method: "DELETE",
+          headers: { "Content-type": "application/json" },
+        }
+      );
       const parseData = await response.json();
       toast.success(parseData.message);
+      setSelectedService("Service");
     } catch (error) {
       console.error(error);
     }
   }
 
-  async function fetchTypes() {
+  async function fetchServices() {
     try {
-      const response = await fetch(`http://localhost:4000/types`, {
+      const response = await fetch("http://localhost:4000/services", {
         method: "GET",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-type": "application/json" },
       });
-      const parseDate = await response.json();
-      setTypes(parseDate);
+      const parseData = await response.json();
+      setServices(parseData);
     } catch (error) {
       console.error(error.message);
     }
   }
   useEffect(() => {
-    fetchTypes();
+    fetchServices();
   }, []);
   return (
     <div className="d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="deleType"
+        id="deletServiceForm"
         tabIndex="-1"
-        aria-labelledby="deleTypeLabel"
+        aria-labelledby="deletServiceFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="deleType">
-                Supprimer un type
+              <h1 className="modal-title fs-5" id="deletServiceForm">
+                Supprimer un service
               </h1>
               <button
                 type="button"
@@ -60,19 +65,24 @@ const DeleteType = () => {
                   <div className="col">
                     <div className="form-group">
                       <label className="mb-2" htmlFor="modele">
-                        Type
+                        Service
                       </label>
                       <select
+                        value={selectedService}
+                        onChange={(e) => setSelectedService(e.target.value)}
                         className="form-select"
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
+                        name=""
+                        id=""
                       >
-                        <option disabled>Type</option>
-                        {types &&
-                          types.map((type) => {
+                        <option disabled>Service</option>
+                        {services &&
+                          services.map((service) => {
                             return (
-                              <option key={type.id_type} value={type.id_type}>
-                                {type.type}
+                              <option
+                                key={service.id_service}
+                                value={service.id_service}
+                              >
+                                {service.service}
                               </option>
                             );
                           })}
@@ -91,7 +101,7 @@ const DeleteType = () => {
                 Fermer
               </button>
               <button
-                onClick={(e) => deleteType(type)}
+                onClick={(e) => deleteService(selectedService)}
                 data-bs-dismiss="modal"
                 type="button"
                 className="btn btn-danger"
@@ -106,4 +116,4 @@ const DeleteType = () => {
   );
 };
 
-export default DeleteType;
+export default DeleteService;

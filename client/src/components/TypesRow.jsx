@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 const TypesRow = () => {
   const [types, setTypes] = useState([]);
@@ -15,7 +15,7 @@ const TypesRow = () => {
       console.error(error.message);
     }
   }
-  useEffect(() => {
+  useCallback(() => {
     fetchTypes();
   }, [types]);
 
@@ -53,7 +53,7 @@ const TypesRow = () => {
             type="button"
             className="btn btn-warning col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#deleType"
+            data-bs-target="#editTypeForm"
           >
             Modifier un Type
           </button>

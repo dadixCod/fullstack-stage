@@ -8,6 +8,7 @@ router.get("", async (req, res) => {
   try {
     const services = await pool.query("SELECT * FROM services ");
     res.status(200).json(services.rows);
+    
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server Error");
@@ -51,9 +52,14 @@ router.post("/add", async (req, res) => {
         [id_sousdirection, service]
       );
 
-      res.status(200).json(newService.rows[0]);
+      res.status(200).json({
+        message: "Nouveau Service ajouté avec succès",
+        newService: newService.rows[0],
+      });
     } else {
-      return res.json("Service ou Sous Direction est vide");
+      res.json({
+        message: "Service ou Sous Direction est vide",
+      });
     }
   } catch (error) {
     console.error(error.message);
@@ -66,17 +72,32 @@ router.put("/update/:id", async (req, res) => {
   const { id } = req.params;
   try {
     //1. destructure body
-    const { id_sousdirection, service } = req.body;
+    const { id_sousdirection, newService } = req.body;
 
-    if (id_sousdirection && service) {
-      const updatedService = await pool.query(
-        "UPDATE services  SET id_sousdirection = $1 , service = $2 WHERE id_service = $3 RETURNING *",
-        [id_sousdirection, service, id]
-      );
-
-      res.status(200).json(updatedService.rows[0]);
+    if (id_sousdirection) {
+      if (newService) {
+        const updatedService = await pool.query(
+          "UPDATE services  SET id_sousdirection = $1 , service = $2 WHERE id_service = $3 RETURNING *",
+          [id_sousdirection, newService, id]
+        );
+        res.status(200).json({
+          message: "Service est mis à jour",
+          updated: updatedService.rows[0],
+        });
+      } else {
+        const updatedService = await pool.query(
+          "UPDATE services  SET id_sousdirection = $1 WHERE id_service = $2 RETURNING *",
+          [id_sousdirection, id]
+        );
+        res.status(200).json({
+          message: "Service est mis à jour",
+          updated: updatedService.rows[0],
+        });
+      }
     } else {
-      return res.json("Service ou Sous direction est vide");
+      return res.json({
+        message: "Service ou Sous direction est vide",
+      });
     }
   } catch (error) {
     console.error(error.message);
@@ -96,7 +117,9 @@ router.delete("/delete/:id", async (req, res) => {
     if (service.rows.length === 0) {
       return res.status(404).json("Service non trouvé");
     }
-    res.status(200).json("Service supprimé avec succès");
+    res.status(200).json({
+      message: "Service supprimé avec succès",
+    });
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server Error");

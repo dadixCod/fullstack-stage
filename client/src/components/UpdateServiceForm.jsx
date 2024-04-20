@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const AddServiceForm = () => {
-  const [service, setService] = useState("");
+const UpdateServiceForm = () => {
+  const [selectedService, setSelectedService] = useState("Service");
+  const [services, setServices] = useState("");
+  const [newService, setNewService] = useState("");
   const [selectedSousDirection, setSelectedSousdirection] =
     useState("Sous Directions");
   const [sousdirections, setSousdirections] = useState([]);
@@ -19,24 +21,45 @@ const AddServiceForm = () => {
       console.error(error.message);
     }
   }
+  async function fetchServices() {
+    try {
+      const response = await fetch("http://localhost:4000/services", {
+        method: "GET",
+        headers: { "Content-type": "application/json" },
+      });
+      const parseData = await response.json();
+      setServices(parseData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
+  const onServiceSelected = (id_service, id_sousdirection) => {
+    setSelectedService(id_service);
+    setSelectedSousdirection(id_sousdirection);
+  };
 
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
       const body = {
-        service,
+        newService: newService,
         id_sousdirection: selectedSousDirection,
       };
-      const response = await fetch(`http://localhost:4000/services/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const response = await fetch(
+        `http://localhost:4000/services/update/${selectedService}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
       const parseData = await response.json();
-      if (parseData.newService) {
+      if (parseData.updated) {
         toast.success(parseData.message);
+        setSelectedService("Service");
+        setNewService("");
         setSelectedSousdirection("Sous Directions");
-        setService("");
       } else {
         toast.error(parseData.message);
       }
@@ -45,21 +68,23 @@ const AddServiceForm = () => {
     }
   };
   useEffect(() => {
+    fetchServices();
     fetchSousDirections();
   }, []);
+
   return (
-    <div className="mb-4 d-flex justify-content-between align-items-center">
+    <div className="d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="addServiceForm"
+        id="updateServiceForm"
         tabIndex="-1"
-        aria-labelledby="addServiceFormLabel"
+        aria-labelledby="updateServiceFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="addServiceForm">
+              <h1 className="modal-title fs-5" id="updateServiceForm">
                 Ajouter un service
               </h1>
               <button
@@ -72,6 +97,44 @@ const AddServiceForm = () => {
             <div className="modal-body">
               <form className="mx-3">
                 <div className="row my-3">
+                  <div className="col">
+                    <div className="form-group">
+                      <label className="mb-2" htmlFor="modele">
+                        Service
+                      </label>
+                      <select
+                        value={selectedService}
+                        onChange={(e) => {
+                          const selectedOption =
+                            e.target.options[e.target.selectedIndex];
+                          const idService =
+                            selectedOption.getAttribute("data-id-service");
+                          const idSousDirection = selectedOption.getAttribute(
+                            "data-id-sousdirection"
+                          );
+                          onServiceSelected(idService, idSousDirection);
+                        }}
+                        className="form-select"
+                        name=""
+                        id=""
+                      >
+                        <option disabled>Service</option>
+                        {services &&
+                          services.map((service) => {
+                            return (
+                              <option
+                                key={service.id_service}
+                                value={service.id_service}
+                                data-id-service={service.id_service}
+                                data-id-sousdirection={service.id_sousdirection}
+                              >
+                                {service.service}
+                              </option>
+                            );
+                          })}
+                      </select>
+                    </div>
+                  </div>
                   <div className="col">
                     <div className="form-group">
                       <label className="mb-2" htmlFor="modele">
@@ -99,19 +162,17 @@ const AddServiceForm = () => {
                       </select>
                     </div>
                   </div>
+                </div>
+                <div className="row my-3">
                   <div className="col">
                     <div className="form-group">
-                      <label className="mb-2" htmlFor="modele">
-                        Service
-                      </label>
+                      <label htmlFor="newService">Nouveau Service</label>
                       <input
                         className="form-control"
-                        value={service}
-                        onChange={(e) => setService(e.target.value)}
+                        value={newService}
+                        onChange={(e) => setNewService(e.target.value)}
                         type="text"
-                        name="service"
-                        id="service"
-                        placeholder="Service"
+                        placeholder="Optionnel(Nouveau Service)"
                       />
                     </div>
                   </div>
@@ -142,4 +203,4 @@ const AddServiceForm = () => {
   );
 };
 
-export default AddServiceForm;
+export default UpdateServiceForm;

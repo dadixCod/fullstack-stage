@@ -17,14 +17,13 @@ const ServicesRow = () => {
   }
   useEffect(() => {
     fetchServices();
-  }, [services]);
+  }, []);
 
   return (
-    <div className="card text-bg-light">
-        <div className=" mx-4 mt-4">
-
-      <span className="text-start fs-2 fw-medium">Services</span>
-        </div>
+    <div className=" mb-4 card text-bg-light">
+      <div className=" mx-4 mt-4">
+        <span className="text-start fs-2 fw-medium">Services</span>
+      </div>
       <div className="d-flex justify-content-between align-items-center mx-4 mt-3 mb-5">
         <div className="col">
           <select value={selectedService} className="form-select">
@@ -54,7 +53,7 @@ const ServicesRow = () => {
             type="button"
             className="btn btn-warning col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#deleType"
+            data-bs-target="#updateServiceForm"
           >
             Modifier un Service
           </button>
@@ -64,7 +63,7 @@ const ServicesRow = () => {
             type="button"
             className="btn btn-danger col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#deleType"
+            data-bs-target="#deletServiceForm"
           >
             Supprimer un Service
           </button>

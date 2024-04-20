@@ -1,11 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const AddServiceForm = () => {
-  const [service, setService] = useState("");
-  const [selectedSousDirection, setSelectedSousdirection] =
-    useState("Sous Directions");
-  const [sousdirections, setSousdirections] = useState([]);
+const DeleteSousDirectionForm = () => {
+  const [selectedSousdirection, setSelectedSousDirection] =
+    useState("Sous Direction");
+  const [sousdirections, setSousDirections] = useState([]);
+  async function deletSousDirection() {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/sousdirections/delete/${selectedSousdirection}`,
+        {
+          method: "DELETE",
+          headers: { "Content-type": "application/json" },
+        }
+      );
+      const parseData = await response.json();
+      toast.success(parseData.message);
+      setSelectedSousDirection("Sous Direction");
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   async function fetchSousDirections() {
     try {
@@ -14,53 +29,28 @@ const AddServiceForm = () => {
         headers: { "Content-type": "application/json" },
       });
       const parseData = await response.json();
-      setSousdirections(parseData);
+      setSousDirections(parseData);
     } catch (error) {
       console.error(error.message);
     }
   }
-
-  const onSubmitForm = async (e) => {
-    e.preventDefault();
-    try {
-      const body = {
-        service,
-        id_sousdirection: selectedSousDirection,
-      };
-      const response = await fetch(`http://localhost:4000/services/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const parseData = await response.json();
-      if (parseData.newService) {
-        toast.success(parseData.message);
-        setSelectedSousdirection("Sous Directions");
-        setService("");
-      } else {
-        toast.error(parseData.message);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
   useEffect(() => {
     fetchSousDirections();
   }, []);
   return (
-    <div className="mb-4 d-flex justify-content-between align-items-center">
+    <div className="d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="addServiceForm"
+        id="deleteSousDirectionForm"
         tabIndex="-1"
-        aria-labelledby="addServiceFormLabel"
+        aria-labelledby="deleteSousDirectionFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="addServiceForm">
-                Ajouter un service
+              <h1 className="modal-title fs-5" id="deleteSousDirectionForm">
+                Supprimer une Sous Direction
               </h1>
               <button
                 type="button"
@@ -78,13 +68,13 @@ const AddServiceForm = () => {
                         Sous Direction
                       </label>
                       <select
-                        value={selectedSousDirection}
-                        onChange={(e) =>
-                          setSelectedSousdirection(e.target.value)
-                        }
                         className="form-select"
+                        value={selectedSousdirection}
+                        onChange={(e) =>
+                          setSelectedSousDirection(e.target.value)
+                        }
                       >
-                        <option disabled>Sous Directions</option>
+                        <option disabled>Sous Direction</option>
                         {sousdirections &&
                           sousdirections.map((sousdirection) => {
                             return (
@@ -99,22 +89,6 @@ const AddServiceForm = () => {
                       </select>
                     </div>
                   </div>
-                  <div className="col">
-                    <div className="form-group">
-                      <label className="mb-2" htmlFor="modele">
-                        Service
-                      </label>
-                      <input
-                        className="form-control"
-                        value={service}
-                        onChange={(e) => setService(e.target.value)}
-                        type="text"
-                        name="service"
-                        id="service"
-                        placeholder="Service"
-                      />
-                    </div>
-                  </div>
                 </div>
               </form>
             </div>
@@ -127,12 +101,12 @@ const AddServiceForm = () => {
                 Fermer
               </button>
               <button
-                onClick={onSubmitForm}
+                onClick={(e) => deletSousDirection()}
                 data-bs-dismiss="modal"
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-danger"
               >
-                Ajouter
+                Supprimer
               </button>
             </div>
           </div>
@@ -142,4 +116,4 @@ const AddServiceForm = () => {
   );
 };
 
-export default AddServiceForm;
+export default DeleteSousDirectionForm;
