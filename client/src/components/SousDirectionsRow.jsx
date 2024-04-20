@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import AddSousDirectionForm from "./AddSousDirectionForm";
+import UpdateSousDirectionForm from "./UpdateSousDirectionForm";
+import DeleteSousDirectionForm from "./DeleteSousDirectionForm";
 
 const SousDirectionsRow = () => {
   const [sousDirections, setSousDirections] = useState([]);
@@ -23,6 +26,15 @@ const SousDirectionsRow = () => {
 
   return (
     <div className="card text-bg-light">
+      <AddSousDirectionForm fetchSousDirections={fetchSousDirections} />
+      <UpdateSousDirectionForm
+        fetchSousDirections={fetchSousDirections}
+        sousdirections={sousDirections}
+      />
+      <DeleteSousDirectionForm
+        fetchSousDirections={fetchSousDirections}
+        sousdirections={sousDirections}
+      />
       <div className=" mx-4 mt-4">
         <span className="text-start fs-2 fw-medium">Sous Directions</span>
       </div>

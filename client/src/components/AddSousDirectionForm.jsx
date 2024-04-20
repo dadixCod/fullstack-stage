@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const AddSousDirectionForm = () => {
+const AddSousDirectionForm = ({ fetchSousDirections }) => {
   const [sousdirection, setSousDirection] = useState("");
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -16,6 +16,7 @@ const AddSousDirectionForm = () => {
       });
       const parseData = await response.json();
       if (parseData.newSousDirection) {
+        fetchSousDirections();
         toast.success(parseData.message);
         setSousDirection("");
       } else {

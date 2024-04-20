@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const UpdateServiceForm = () => {
+const UpdateServiceForm = ({ fetchServices, services }) => {
   const [selectedService, setSelectedService] = useState("Service");
-  const [services, setServices] = useState("");
+
   const [newService, setNewService] = useState("");
   const [selectedSousDirection, setSelectedSousdirection] =
     useState("Sous Directions");
@@ -17,18 +17,6 @@ const UpdateServiceForm = () => {
       });
       const parseData = await response.json();
       setSousdirections(parseData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-  async function fetchServices() {
-    try {
-      const response = await fetch("http://localhost:4000/services", {
-        method: "GET",
-        headers: { "Content-type": "application/json" },
-      });
-      const parseData = await response.json();
-      setServices(parseData);
     } catch (error) {
       console.error(error.message);
     }
@@ -56,6 +44,7 @@ const UpdateServiceForm = () => {
       );
       const parseData = await response.json();
       if (parseData.updated) {
+        fetchServices();
         toast.success(parseData.message);
         setSelectedService("Service");
         setNewService("");
@@ -85,7 +74,7 @@ const UpdateServiceForm = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="updateServiceForm">
-                Ajouter un service
+                Modifier un service
               </h1>
               <button
                 type="button"
@@ -193,7 +182,7 @@ const UpdateServiceForm = () => {
                 type="button"
                 className="btn btn-primary"
               >
-                Ajouter
+                Modifier
               </button>
             </div>
           </div>

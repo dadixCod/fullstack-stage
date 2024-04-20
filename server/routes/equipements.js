@@ -114,6 +114,8 @@ router.get("/affectation/:num_inventaire", async (req, res) => {
   }
 });
 
+
+
 //add equipement
 router.post("/add", async (req, res) => {
   try {

@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteService = () => {
+const DeleteService = ({ fetchServices, services }) => {
   const [selectedService, setSelectedService] = useState("Service");
-  const [services, setServices] = useState("");
 
   async function deleteService() {
     try {
@@ -15,6 +14,7 @@ const DeleteService = () => {
         }
       );
       const parseData = await response.json();
+      fetchServices();
       toast.success(parseData.message);
       setSelectedService("Service");
     } catch (error) {
@@ -22,18 +22,6 @@ const DeleteService = () => {
     }
   }
 
-  async function fetchServices() {
-    try {
-      const response = await fetch("http://localhost:4000/services", {
-        method: "GET",
-        headers: { "Content-type": "application/json" },
-      });
-      const parseData = await response.json();
-      setServices(parseData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
   useEffect(() => {
     fetchServices();
   }, []);

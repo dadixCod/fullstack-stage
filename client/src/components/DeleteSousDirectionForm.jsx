@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteSousDirectionForm = () => {
+const DeleteSousDirectionForm = ({ fetchSousDirections, sousdirections }) => {
   const [selectedSousdirection, setSelectedSousDirection] =
     useState("Sous Direction");
-  const [sousdirections, setSousDirections] = useState([]);
+
   async function deletSousDirection() {
     try {
       const response = await fetch(
@@ -15,6 +15,7 @@ const DeleteSousDirectionForm = () => {
         }
       );
       const parseData = await response.json();
+      fetchSousDirections();
       toast.success(parseData.message);
       setSelectedSousDirection("Sous Direction");
     } catch (error) {
@@ -22,18 +23,6 @@ const DeleteSousDirectionForm = () => {
     }
   }
 
-  async function fetchSousDirections() {
-    try {
-      const response = await fetch("http://localhost:4000/sousdirections", {
-        method: "GET",
-        headers: { "Content-type": "application/json" },
-      });
-      const parseData = await response.json();
-      setSousDirections(parseData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
   useEffect(() => {
     fetchSousDirections();
   }, []);

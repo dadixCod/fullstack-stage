@@ -39,6 +39,12 @@ app.use("/etats", require("./routes/etats"));
 //Affectation route
 app.use("/affectation", require("./routes/affectation"));
 
+//Statistiques route
+app.use("/statistiques", require("./routes/statistiques"));
+
+//Maintenance route
+app.use("/maintenance", require("./routes/maintenance"));
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server started on port : ${port}`);

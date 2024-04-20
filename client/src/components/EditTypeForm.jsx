@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const EditType = () => {
+const EditType = ({ types, setTypes }) => {
   const [id_type, setIdType] = useState("Type");
   const [newType, setNewType] = useState("");
-  const [types, setTypes] = useState([]);
 
   async function editType(newType) {
     try {
@@ -20,6 +19,11 @@ const EditType = () => {
       const parseData = await response.json();
       if (parseData.updated) {
         toast.success(parseData.message);
+        setTypes((prevTypes) =>
+          prevTypes.map((type) =>
+            type.id_type === id_type ? { ...type, type: newType } : type
+          )
+        );
         setNewType("");
         setIdType("Type");
       } else {
@@ -30,21 +34,6 @@ const EditType = () => {
     }
   }
 
-  async function fetchTypes() {
-    try {
-      const response = await fetch(`http://localhost:4000/types`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseDate = await response.json();
-      setTypes(parseDate);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-  useEffect(() => {
-    fetchTypes();
-  }, []);
   return (
     <div className=" d-flex justify-content-between align-items-center">
       <div

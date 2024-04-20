@@ -8,6 +8,7 @@ router.get("/", async (req, res) => {
     const agents = await pool.query(
       "SELECT id_agent,agents.nom,prenom,fonction,sousdirection,service,bureaux.bureau FROM agents  JOIN sousdirections ON agents.id_sousdirection = sousdirections.id_sousdirection JOIN services ON agents.id_service = services.id_service JOIN bureaux ON agents.id_bureau= bureaux.id_bureau "
     );
+    console.log("Agents called");
     res.status(200).json(agents.rows);
   } catch (error) {
     console.error(error.message);

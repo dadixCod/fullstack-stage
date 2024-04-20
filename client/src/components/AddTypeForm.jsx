@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const AddTypeForm = () => {
+const AddTypeForm = ({ setTypes }) => {
   const [type, setType] = useState("");
   async function fetchTypes() {
     try {
@@ -9,7 +9,8 @@ const AddTypeForm = () => {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      const parseDate = await response.json();
+      const parseData = await response.json();
+      setTypes(parseData);
     } catch (error) {
       console.error(error.message);
     }

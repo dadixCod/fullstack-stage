@@ -3,9 +3,8 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddEquipementForm = () => {
-  const [types, setTypes] = useState([]);
-  const [etats, setEtats] = useState([]);
+const AddEquipementForm = ({ fetchEquipements, fetchTypes, types ,fetchEtats,etats}) => {
+  
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [selectedType, setSelectedType] = useState("Type");
@@ -25,6 +24,7 @@ const AddEquipementForm = () => {
       });
       const parseData = await response.json();
       if (parseData.newType) {
+        fetchTypes();
         toast.success(parseData.message);
         setAddTypeClicked(false);
         setType("");
@@ -46,30 +46,7 @@ const AddEquipementForm = () => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-  async function fetchTypes() {
-    try {
-      const response = await fetch("http://localhost:4000/types", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseDate = await response.json();
-      setTypes(parseDate);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-  async function fetchEtats() {
-    try {
-      const response = await fetch("http://localhost:4000/etats", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseDate = await response.json();
-      setEtats(parseDate);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
+
   // const handleDateChange = (date) => {
   //   setSelectedDate(date);
   // };
@@ -92,6 +69,7 @@ const AddEquipementForm = () => {
       });
       const parseData = await response.json();
       if (parseData.newEquipement) {
+        fetchEquipements();
         toast.success(parseData.message);
         setInputs({
           sn: "",
@@ -110,10 +88,10 @@ const AddEquipementForm = () => {
 
   useEffect(() => {
     fetchTypes();
-  }, [types]);
+  }, []);
   useEffect(() => {
     fetchEtats();
-  }, [etats]);
+  }, []);
 
   return (
     <div className="mb-4 d-flex justify-content-between align-items-center">

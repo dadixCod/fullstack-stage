@@ -6,6 +6,7 @@ router.get("", async (req, res) => {
     const affectations = await pool.query(
       "SELECT num_affectation,num_inventaire,sn,modele,types.type,agents.nom,agents.prenom,dateaffectation FROM affectation JOIN types ON affectation.id_type = types.id_type JOIN agents ON affectation.id_agent = agents.id_agent ORDER BY num_affectation ASC"
     );
+    console.log("Affectation called");
     res.status(200).json(affectations.rows);
   } catch (error) {
     res.json("Serveur Erreur");

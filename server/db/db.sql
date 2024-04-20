@@ -59,3 +59,6 @@ INSERT INTO service(id_sousdirection,service) values(1,'Ecoute sociale et commun
 
 
 SELECT num_lot,equipement.nom as modele,types.type,agents.nom,dateaquisition,dateaffectation as agent FROM equipement LEFT JOIN agents ON equipement.num_lot = agents.id_equipement JOIN types ON  equipement.id_type = types.id_type;
+
+
+

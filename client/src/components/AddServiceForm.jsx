@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const AddServiceForm = () => {
+const AddServiceForm = ({ fetchServices }) => {
   const [service, setService] = useState("");
   const [selectedSousDirection, setSelectedSousdirection] =
     useState("Sous Directions");
@@ -34,6 +34,7 @@ const AddServiceForm = () => {
       });
       const parseData = await response.json();
       if (parseData.newService) {
+        fetchServices();
         toast.success(parseData.message);
         setSelectedSousdirection("Sous Directions");
         setService("");

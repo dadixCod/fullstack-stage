@@ -51,6 +51,11 @@ const AffectationComp = () => {
         }
       );
       const parseData = await response.json();
+      setAffectations(
+        affectations.filter((affectation) => {
+          return affectation.num_affectation !== num_affectation;
+        })
+      );
       toast.success(parseData.message);
     } catch (error) {
       console.error(error.message);
@@ -58,11 +63,11 @@ const AffectationComp = () => {
   };
   useEffect(() => {
     fetchAffectations();
-  }, [affectations]);
+  }, []);
   return (
     <div>
       <h1 className="text-center mt-2"> Affectation</h1>
-      <AffectationOperationRow />
+      <AffectationOperationRow fetchAffectations={fetchAffectations} />
 
       <table className="table table-hover table-dark mt-5">
         <thead>
@@ -143,7 +148,7 @@ const AffectationComp = () => {
       {selectedAffectation === null ? (
         <></>
       ) : (
-        <div className="card">
+        <div style={{ opacity: 0 }} className="card">
           <PrintableComponent ref={componentRef} data={selectedAffectation} />
         </div>
       )}

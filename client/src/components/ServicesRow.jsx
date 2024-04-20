@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import AddServiceForm from "./AddServiceForm";
+import UpdateServiceForm from "./UpdateServiceForm";
+import DeleteService from "./DeleteService";
 
 const ServicesRow = () => {
   const [services, setServices] = useState([]);
@@ -21,6 +24,9 @@ const ServicesRow = () => {
 
   return (
     <div className=" mb-4 card text-bg-light">
+      <AddServiceForm fetchServices={fetchServices} />
+      <UpdateServiceForm fetchServices={fetchServices} services={services} />
+      <DeleteService fetchServices={fetchServices} services={services} />
       <div className=" mx-4 mt-4">
         <span className="text-start fs-2 fw-medium">Services</span>
       </div>

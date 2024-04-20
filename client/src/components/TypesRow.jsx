@@ -1,4 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
+import AddTypeForm from "./AddTypeForm";
+import DeleteType from "./DeleteType";
+import EditType from "./EditTypeForm";
 
 const TypesRow = () => {
   const [types, setTypes] = useState([]);
@@ -15,12 +18,15 @@ const TypesRow = () => {
       console.error(error.message);
     }
   }
-  useCallback(() => {
+  useEffect(() => {
     fetchTypes();
-  }, [types]);
+  }, []);
 
   return (
-    <div className="card text-bg-light">
+    <div className="card text-bg-light mb-4">
+      <AddTypeForm setTypes={setTypes} />
+      <EditType types={types} setTypes={setTypes} />
+      <DeleteType types={types} setTypes={setTypes} />
       <div className=" mx-4 mt-4">
         <span className="text-start fs-2 fw-medium">Types</span>
       </div>

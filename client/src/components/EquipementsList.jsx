@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import moment from "moment";
-
+import AddEquipementForm from "./AddEquipementForm";
 const EquipementsList = () => {
+  const [etats, setEtats] = useState([]);
   const [equipements, setEquipements] = useState([]);
   const [search, setSearch] = useState("");
   const [types, setTypes] = useState([]);
@@ -88,15 +89,32 @@ const EquipementsList = () => {
         }
       );
       const parseData = await response.json();
+      setEquipements(
+        equipements.filter((equipement) => {
+          return equipement.num_inventaire != id;
+        })
+      );
       toast.success(parseData);
     } catch (error) {
       console.log(error.message);
     }
   };
+  async function fetchEtats() {
+    try {
+      const response = await fetch("http://localhost:4000/etats", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const parseDate = await response.json();
+      setEtats(parseDate);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
   useEffect(() => {
     fetchTypes();
-  }, [types]);
+  }, []);
   useEffect(() => {}, [selectedType]);
   useEffect(() => {
     if (search === "") {
@@ -104,9 +122,16 @@ const EquipementsList = () => {
     } else {
       searchByModele();
     }
-  }, [equipements, search]);
+  }, [search, selectedType]);
   return (
     <div>
+      <AddEquipementForm
+        fetchEquipements={fetchEquipements}
+        fetchTypes={fetchTypes}
+        types={types}
+        fetchEtats={fetchEtats}
+        etats={etats}
+      />
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="col">
           <input
@@ -148,7 +173,6 @@ const EquipementsList = () => {
       </div>
 
       {equipements.length === 0 ? (
-
         <h3 className="text-center mt-5">Pas d'équipements ajoutés</h3>
       ) : (
         <table className="table table-hover table-dark">

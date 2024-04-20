@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
-const AddAgentForm = () => {
+const AddAgentForm = ({ fetchAgents, fetchBureaux, bureaux }) => {
   const [directions, setDirections] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedSousdirection, setSelectedSousdirection] = useState("");
-  const [bureuax, setBureaux] = useState([]);
+
   const [selectedBureau, setSelectedBureau] = useState("Bureau");
   const [addBureauClicked, setAddBureauClicked] = useState(false);
   const [bureau, setBureau] = useState("");
@@ -25,6 +25,7 @@ const AddAgentForm = () => {
         toast.success(parseData.message);
         setAddBureauClicked(false);
         setBureau("");
+        fetchBureaux();
       } else {
         toast.error(parseData.message);
       }
@@ -32,18 +33,6 @@ const AddAgentForm = () => {
       console.error(error.message);
     }
   };
-  async function fetchBureaux() {
-    try {
-      const response = await fetch("http://localhost:4000/bureaux", {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseData = await response.json();
-      setBureaux(parseData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
 
   const [inputs, setInputs] = useState({
     nom: "",
@@ -94,7 +83,7 @@ const AddAgentForm = () => {
 
       setServices(services);
     } catch (error) {
-      console.error(error.message);
+      // console.error(error.message);
     }
   }
   const onSubmitForm = async (e) => {
@@ -115,6 +104,7 @@ const AddAgentForm = () => {
       });
       const parseData = await response.json();
       if (parseData) {
+        fetchAgents();
         toast.success(parseData.message);
         setInputs({
           nom: "",
@@ -135,7 +125,7 @@ const AddAgentForm = () => {
   }, []);
   useEffect(() => {
     fetchBureaux();
-  }, [bureuax]);
+  }, []);
   useEffect(() => {}, [selectedSousdirection]);
   useEffect(() => {
     fetchSubServices(selectedSousdirection);
@@ -273,8 +263,8 @@ const AddAgentForm = () => {
                           onChange={(e) => setSelectedBureau(e.target.value)}
                         >
                           <option disabled>Bureau</option>
-                          {bureuax &&
-                            bureuax.map((bureau) => {
+                          {bureaux &&
+                            bureaux.map((bureau) => {
                               return (
                                 <option
                                   key={bureau.id_bureau}

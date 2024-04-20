@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteType = () => {
+const DeleteType = ({ types ,setTypes}) => {
   const [type, setType] = useState("Type");
-  const [types, setTypes] = useState([]);
+
   async function deleteType(id) {
     try {
       const response = await fetch(`http://localhost:4000/types/delete/${id}`, {
         method: "DELETE",
         headers: { "Content-type": "application/json" },
       });
+      setTypes(
+        types.filter((atype) => {
+          return atype.id_type !== type;
+        })
+      );
       const parseData = await response.json();
       toast.success(parseData.message);
     } catch (error) {
@@ -17,21 +22,6 @@ const DeleteType = () => {
     }
   }
 
-  async function fetchTypes() {
-    try {
-      const response = await fetch(`http://localhost:4000/types`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseDate = await response.json();
-      setTypes(parseDate);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
-  useEffect(() => {
-    fetchTypes();
-  }, []);
   return (
     <div className="d-flex justify-content-between align-items-center">
       <div

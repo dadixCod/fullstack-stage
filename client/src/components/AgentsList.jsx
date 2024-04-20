@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import AddBureauForm from "./AddBureauForm";
+import AddAgentForm from "./AddAgentForm";
 
 const AgentsList = () => {
   const [agents, setAgents] = useState([]);
   const [search, setSearch] = useState("");
+  const [bureaux, setBureaux] = useState([]);
 
   let navigate = useNavigate();
   async function fetchAgents() {
@@ -57,12 +59,29 @@ const AgentsList = () => {
       );
       const parsedData = await response.json();
       if (parsedData) {
+        setAgents(
+          agents.filter((agent) => {
+            return agent.id_agent !== id;
+          })
+        );
         toast.success(parsedData.message);
       }
     } catch (error) {
       console.log(error.message);
     }
   };
+  async function fetchBureaux() {
+    try {
+      const response = await fetch("http://localhost:4000/bureaux", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const parseData = await response.json();
+      setBureaux(parseData);
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
 
   useEffect(() => {
     if (search === "") {
@@ -70,10 +89,15 @@ const AgentsList = () => {
     } else {
       searchByName(search);
     }
-  }, [search, agents]);
+  }, [search]);
   return (
     <div>
       <AddBureauForm />
+      <AddAgentForm
+        fetchAgents={fetchAgents}
+        fetchBureaux={fetchBureaux}
+        bureaux={bureaux}
+      />
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div className="col">
           <input
@@ -96,7 +120,7 @@ const AgentsList = () => {
           </button>
         </div>
       </div>
-      <table className="table table-hover table-dark">
+      {agents.length !== 0 ? <table className="table table-hover table-dark">
         <thead>
           <tr className="table-primary">
             <th scope="col">Nom</th>
@@ -144,7 +168,7 @@ const AgentsList = () => {
               );
             })}
         </tbody>
-      </table>
+      </table> : <h2 className="text-center mt-4">Pas d'agents</h2>}
     </div>
   );
 };

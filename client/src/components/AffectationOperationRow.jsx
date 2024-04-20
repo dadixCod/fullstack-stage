@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast } from "react-toastify";
 
-const AffectationOperationRow = () => {
+const AffectationOperationRow = ({ fetchAffectations }) => {
   const [selectedEquipement, setSelectedEquipement] = useState("Equipement");
   const [equipements, setEquipements] = useState([]);
   const [selectedAgent, setSelectedAgent] = useState("Agent");
@@ -83,6 +83,10 @@ const AffectationOperationRow = () => {
       console.log(response);
       const parseData = await response.json();
       if (parseData.affected) {
+        fetchAffectations();
+        setSelectedEquipement("Equipement");
+        setSelectedAgent("Agent");
+        setSelectedDate(new Date());
         toast.success(parseData.message);
       } else {
         toast.error(parseData.message);

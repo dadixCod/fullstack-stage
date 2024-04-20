@@ -7,8 +7,8 @@ const pool = require("../db");
 router.get("", async (req, res) => {
   try {
     const services = await pool.query("SELECT * FROM services ");
+    console.log("Services called");
     res.status(200).json(services.rows);
-    
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server Error");

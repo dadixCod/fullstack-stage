@@ -7,6 +7,7 @@ const pool = require("../db");
 router.get("", async (req, res) => {
   try {
     const sousdirections = await pool.query("SELECT * FROM sousdirections ");
+    console.log("Sous Directions called");
     res.status(200).json(sousdirections.rows);
   } catch (error) {
     console.error(error.message);
@@ -92,7 +93,7 @@ router.delete("/delete/:id", async (req, res) => {
       return res.status(404).json("Sousdirection non trouvé");
     }
     res.status(200).json({
-      message:"Sousdirection supprimé avec succès"
+      message: "Sousdirection supprimé avec succès",
     });
   } catch (error) {
     console.error(error.message);
