@@ -1,44 +1,45 @@
 import React, { useCallback, useEffect, useState } from "react";
-import AddTypeForm from "./AddTypeForm";
-import DeleteType from "./DeleteType";
-import EditType from "./EditTypeForm";
+import AddBureauForm from "./AddBureauForm";
+import EditBureauForm from "./EditBureauForm";
+import DeleteBureau from "./DeleteBureau";
 
-const TypesRow = () => {
-  const [types, setTypes] = useState([]);
-  const [selectedType, setSelectedType] = useState("Voir les types");
-  async function fetchTypes() {
+const BureauxRow = () => {
+  const [bureaux, setBureaux] = useState([]);
+  const [selectedBureaux, setSelectedBureaux] = useState("Voir les Bureaux");
+  async function fetchBureaux() {
     try {
-      const response = await fetch(`http://localhost:4000/types`, {
+      const response = await fetch(`http://localhost:4000/bureaux`, {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
       const parseDate = await response.json();
-      setTypes(parseDate);
+      setBureaux(parseDate);
     } catch (error) {
       console.error(error.message);
     }
   }
   useEffect(() => {
-    fetchTypes();
+    fetchBureaux();
   }, []);
 
   return (
     <div className="card text-bg-light mb-4">
-      <AddTypeForm fetchTypes={fetchTypes} />
-      <EditType types={types} fetchTypes={fetchTypes} />
-      <DeleteType types={types} fetchTypes={fetchTypes} />
+      <AddBureauForm fetchBureaux={fetchBureaux} />
+      <EditBureauForm bureaux={bureaux} fetchBureaux={fetchBureaux} />
+      <DeleteBureau bureaux={bureaux} fetchBureaux={fetchBureaux} />
+
       <div className=" mx-4 mt-4">
-        <span className="text-start fs-2 fw-medium">Types</span>
+        <span className="text-start fs-2 fw-medium">Bureaux</span>
       </div>
       <div className="d-flex justify-content-between align-items-center mx-4 mt-3 mb-5">
         <div className="col">
-          <select value={selectedType} className="form-select">
-            <option disabled>Voir les types</option>
-            {types &&
-              types.map((type) => {
+          <select value={selectedBureaux} className="form-select">
+            <option disabled>Voir les Bureaux</option>
+            {bureaux &&
+              bureaux.map((bureau) => {
                 return (
-                  <option key={type.id_type} value={type.id_type}>
-                    {type.type}
+                  <option key={bureau.id_bureau} value={bureau.id_bureau}>
+                    {bureau.bureau}
                   </option>
                 );
               })}
@@ -49,9 +50,9 @@ const TypesRow = () => {
             type="button"
             className="btn btn-success col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#addTypeForm"
+            data-bs-target="#addBureauForm"
           >
-            Ajouter un Type
+            Ajouter un Bureau
           </button>
         </div>
         <div className="col-auto mx-2">
@@ -59,9 +60,9 @@ const TypesRow = () => {
             type="button"
             className="btn btn-warning col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#editTypeForm"
+            data-bs-target="#editBureauForm"
           >
-            Modifier un Type
+            Modifier un Bureau
           </button>
         </div>
         <div className="col-auto mx-2">
@@ -69,9 +70,9 @@ const TypesRow = () => {
             type="button"
             className="btn btn-danger col-auto"
             data-bs-toggle="modal"
-            data-bs-target="#deleType"
+            data-bs-target="#deleteBureauForm"
           >
-            Supprimer un Type
+            Supprimer un bureau
           </button>
         </div>
       </div>
@@ -80,4 +81,4 @@ const TypesRow = () => {
   );
 };
 
-export default TypesRow;
+export default BureauxRow;

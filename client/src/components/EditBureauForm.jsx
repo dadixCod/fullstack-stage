@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const EditType = ({ types, fetchTypes }) => {
-  const [id_type, setIdType] = useState("Type");
-  const [newType, setNewType] = useState("");
+const EditBureauForm = ({ bureaux, fetchBureaux }) => {
+  const [id_bureau, setIdBureau] = useState("Bureau");
+  const [newBureau, setNewBureau] = useState("");
 
-  async function editType(newType) {
+  async function editBureau(newBureau) {
     try {
-      const body = { type: newType };
+      const body = { bureau: newBureau };
       const response = await fetch(
-        `http://localhost:4000/types/update/${id_type}`,
+        `http://localhost:4000/bureaux/update/${id_bureau}`,
         {
           method: "PUT",
           headers: { "Content-type": "application/json" },
@@ -19,9 +19,9 @@ const EditType = ({ types, fetchTypes }) => {
       const parseData = await response.json();
       if (parseData.updated) {
         toast.success(parseData.message);
-        fetchTypes();
-        setNewType("");
-        setIdType("Type");
+        fetchBureaux();
+        setNewBureau("");
+        setIdBureau("Bureau");
       } else {
         toast.error(parseData);
       }
@@ -34,16 +34,16 @@ const EditType = ({ types, fetchTypes }) => {
     <div className=" d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="editTypeForm"
+        id="editBureauForm"
         tabIndex="-1"
-        aria-labelledby="editTypeFormLabel"
+        aria-labelledby="editBureauFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="editTypeForm">
-                Editer un type
+              <h1 className="modal-title fs-5" id="editBureauForm">
+                Modifier un bureau
               </h1>
               <button
                 type="button"
@@ -57,20 +57,23 @@ const EditType = ({ types, fetchTypes }) => {
                 <div className="row my-3">
                   <div className="col">
                     <div className="form-group">
-                      <label className="mb-2" htmlFor="modele">
-                        Type
+                      <label className="mb-2" htmlFor="bureau">
+                        Bureau
                       </label>
                       <select
                         className="form-select"
-                        value={id_type}
-                        onChange={(e) => setIdType(e.target.value)}
+                        value={id_bureau}
+                        onChange={(e) => setIdBureau(e.target.value)}
                       >
-                        <option disabled>Type</option>
-                        {types &&
-                          types.map((type) => {
+                        <option disabled>Bureau</option>
+                        {bureaux &&
+                          bureaux.map((bureau) => {
                             return (
-                              <option key={type.id_type} value={type.id_type}>
-                                {type.type}
+                              <option
+                                key={bureau.id_bureau}
+                                value={bureau.id_bureau}
+                              >
+                                {bureau.bureau}
                               </option>
                             );
                           })}
@@ -82,14 +85,14 @@ const EditType = ({ types, fetchTypes }) => {
                   <div className="col">
                     <div className="form-group">
                       <label className="mb-2" htmlFor="modele">
-                        Nouveau Type
+                        Nouveau Bureau
                       </label>
                       <input
-                        value={newType}
+                        value={newBureau}
                         className="form-control"
                         type="text"
-                        onChange={(e) => setNewType(e.target.value)}
-                        placeholder="Nouveau Type"
+                        onChange={(e) => setNewBureau(e.target.value)}
+                        placeholder="Nouveau Bureau"
                       />
                     </div>
                   </div>
@@ -105,7 +108,7 @@ const EditType = ({ types, fetchTypes }) => {
                 Fermer
               </button>
               <button
-                onClick={(e) => editType(newType)}
+                onClick={(e) => editBureau(newBureau)}
                 data-bs-dismiss="modal"
                 type="button"
                 className="btn btn-warning"
@@ -120,4 +123,4 @@ const EditType = ({ types, fetchTypes }) => {
   );
 };
 
-export default EditType;
+export default EditBureauForm;

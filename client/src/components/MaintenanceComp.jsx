@@ -30,6 +30,12 @@ const MaintenanceComp = () => {
   }
 
   async function handleFinish(id_maintenance, num_inventaire) {
+    const confirmFinished = window.confirm(
+      "Êtes-vous sûr que la maintenance de cet équipement est terminée ?"
+    );
+    if (!confirmFinished) {
+      return;
+    }
     try {
       const body = { datefin: new Date(), num_inventaire };
       const response = await fetch(
@@ -56,6 +62,12 @@ const MaintenanceComp = () => {
     } catch (error) {}
   }
   async function handleDelete(id_maintenance) {
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer ce ticket ?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:4000/maintenance/delete/${id_maintenance}`,

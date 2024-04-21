@@ -64,7 +64,7 @@ router.get("/details/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const equipements = await pool.query(
-      "SELECT sn,equipement.modele,types.type,valeur,agents.nom as agent_nom, agents.prenom as agent_prenom,dateaquisition,dateaffectation,etats.etat,bureaux.bureau FROM equipement LEFT JOIN agents ON agents.id_agent = equipement.id_agent LEFT JOIN bureaux ON agents.id_bureau = bureaux.id_bureau JOIN types ON  equipement.id_type = types.id_type JOIN etats ON equipement.id_etat = etats.id_etat WHERE num_inventaire = $1 ",
+      "SELECT sn,equipement.modele,types.type,equipement.id_type,valeur,agents.nom as agent_nom, agents.prenom as agent_prenom,dateaquisition,dateaffectation,etats.etat,bureaux.bureau FROM equipement LEFT JOIN agents ON agents.id_agent = equipement.id_agent LEFT JOIN bureaux ON agents.id_bureau = bureaux.id_bureau JOIN types ON  equipement.id_type = types.id_type JOIN etats ON equipement.id_etat = etats.id_etat WHERE num_inventaire = $1 ",
       [id]
     );
     res.status(200).json(equipements.rows[0]);
@@ -78,7 +78,7 @@ router.get("/search/:letter", async (req, res) => {
   const { letter } = req.params;
   try {
     const equipemnts = await pool.query(
-      "SELECT sn,num_inventaire,equipement.modele,types.type,agents.nom as agent,dateaquisition,dateaffectation,etats.etat FROM equipement LEFT JOIN agents ON agents.id_agent = equipement.id_agent  JOIN types ON  equipement.id_type = types.id_type JOIN etats ON equipement.id_etat = etats.id_etat WHERE equipement.modele ILIKE '%' || $1 || '%' ORDER BY num_inventaire ASC",
+      "SELECT sn,num_inventaire,equipement.modele,types.type,agents.nom as agent,dateaquisition,dateaffectation,etats.etat FROM equipement LEFT JOIN agents ON agents.id_agent = equipement.id_agent  JOIN types ON  equipement.id_type = types.id_type JOIN etats ON equipement.id_etat = etats.id_etat WHERE equipement.modele ILIKE '%' || $1 || '%' OR sn ILIKE '%' || $1 || '%' ORDER BY num_inventaire ASC",
       [letter]
     );
     res.status(200).json(equipemnts.rows);
@@ -113,8 +113,6 @@ router.get("/affectation/:num_inventaire", async (req, res) => {
     console.log(error.message);
   }
 });
-
-
 
 //add equipement
 router.post("/add", async (req, res) => {

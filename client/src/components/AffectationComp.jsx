@@ -40,6 +40,12 @@ const AffectationComp = () => {
   };
   const handleDeleteClick = async (e, num_affectation, num_inventaire) => {
     e.preventDefault();
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cette affectation ?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
     const body = { num_inventaire };
     try {
       const response = await fetch(

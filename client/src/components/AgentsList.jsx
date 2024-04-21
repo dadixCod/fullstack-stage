@@ -49,6 +49,12 @@ const AgentsList = () => {
 
   const handleDelete = async (e, id) => {
     e.stopPropagation();
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cet agent ?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:4000/agents/delete/${id}`,
@@ -120,55 +126,59 @@ const AgentsList = () => {
           </button>
         </div>
       </div>
-      {agents.length !== 0 ? <table className="table table-hover table-dark">
-        <thead>
-          <tr className="table-primary">
-            <th scope="col">Nom</th>
-            <th scope="col">Prénom</th>
-            <th scope="col">Fonction</th>
-            <th scope="col">Sous direction</th>
-            <th scope="col">Service</th>
-            <th scope="col">Bureau</th>
-            <th scope="col">Modifier</th>
-            <th scope="col">Supprimer</th>
-          </tr>
-        </thead>
-        <tbody>
-          {agents &&
-            agents.map((agent) => {
-              return (
-                <tr
-                  onClick={(e) => handleDetails(e, agent.id_agent)}
-                  key={agent.id_agent}
-                >
-                  <td>{agent.nom}</td>
-                  <td>{agent.prenom}</td>
-                  <td>{agent.fonction}</td>
-                  <td>{agent.sousdirection}</td>
-                  <td>{agent.service}</td>
-                  <td>{agent.bureau}</td>
+      {agents.length !== 0 ? (
+        <table className="table table-hover table-dark">
+          <thead>
+            <tr className="table-primary">
+              <th scope="col">Nom</th>
+              <th scope="col">Prénom</th>
+              <th scope="col">Fonction</th>
+              <th scope="col">Sous direction</th>
+              <th scope="col">Service</th>
+              <th scope="col">Bureau</th>
+              <th scope="col">Modifier</th>
+              <th scope="col">Supprimer</th>
+            </tr>
+          </thead>
+          <tbody>
+            {agents &&
+              agents.map((agent) => {
+                return (
+                  <tr
+                    onClick={(e) => handleDetails(e, agent.id_agent)}
+                    key={agent.id_agent}
+                  >
+                    <td>{agent.nom}</td>
+                    <td>{agent.prenom}</td>
+                    <td>{agent.fonction}</td>
+                    <td>{agent.sousdirection}</td>
+                    <td>{agent.service}</td>
+                    <td>{agent.bureau}</td>
 
-                  <td>
-                    <button
-                      className="btn btn-warning"
-                      onClick={(e) => handleEditClick(e, agent.id_agent)}
-                    >
-                      <i className="bi bi-pencil-square"></i>
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      onClick={(e) => handleDelete(e, agent.id_agent)}
-                      className="btn btn-danger"
-                    >
-                      <i className="bi bi-trash-fill"></i>
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </table> : <h2 className="text-center mt-4">Pas d'agents</h2>}
+                    <td>
+                      <button
+                        className="btn btn-warning"
+                        onClick={(e) => handleEditClick(e, agent.id_agent)}
+                      >
+                        <i className="bi bi-pencil-square"></i>
+                      </button>
+                    </td>
+                    <td>
+                      <button
+                        onClick={(e) => handleDelete(e, agent.id_agent)}
+                        className="btn btn-danger"
+                      >
+                        <i className="bi bi-trash-fill"></i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+      ) : (
+        <h2 className="text-center mt-4">Pas d'agents</h2>
+      )}
     </div>
   );
 };

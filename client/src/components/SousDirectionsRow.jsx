@@ -25,7 +25,7 @@ const SousDirectionsRow = () => {
   }, []);
 
   return (
-    <div className="card text-bg-light">
+    <div className="card text-bg-light mb-4">
       <AddSousDirectionForm fetchSousDirections={fetchSousDirections} />
       <UpdateSousDirectionForm
         fetchSousDirections={fetchSousDirections}

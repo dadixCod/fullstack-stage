@@ -53,22 +53,25 @@ router.post("/add", async (req, res) => {
   }
 });
 
-//update sous direction
+//update bureau
 router.put("/update/:id", async (req, res) => {
   const { id } = req.params;
   try {
     //1. destructure body
-    const { sousdirection } = req.body;
+    const { bureau } = req.body;
 
-    if (sousdirection) {
-      const updatedSousDirection = await pool.query(
-        "UPDATE sousdirections  SET sousdirection = $1 WHERE id_sousdirection = $2 RETURNING *",
-        [sousdirection, id]
+    if (bureau) {
+      const updatedbureau = await pool.query(
+        "UPDATE bureaux  SET bureau = $1 WHERE id_bureau = $2 RETURNING *",
+        [bureau, id]
       );
 
-      res.status(200).json(updatedSousDirection.rows[0]);
+      res.status(200).json({
+        message: "Bureau modifié avec succès",
+        updated: updatedbureau.rows[0],
+      });
     } else {
-      return res.json("Sous direction est vide");
+      return res.json("Bureau est vide");
     }
   } catch (error) {
     console.error(error.message);
@@ -76,18 +79,18 @@ router.put("/update/:id", async (req, res) => {
   }
 });
 
-//delete a sous direction
+//delete a bureau
 router.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
-    const sousdirection = await pool.query(
-      "DELETE FROM sousdirections WHERE id_sousdirection = $1 RETURNING *",
+    const bureau = await pool.query(
+      "DELETE FROM bureaux WHERE id_bureau = $1 RETURNING *",
       [id]
     );
-    if (sousdirection.rows.length === 0) {
-      return res.status(404).json("Sousdirection non trouvé");
+    if (bureau.rows.length === 0) {
+      return res.status(404).json("Bureau non trouvé");
     }
-    res.status(200).json("Sousdirection supprimé avec succès");
+    res.status(200).json("Bureau supprimé avec succès");
   } catch (error) {
     console.error(error.message);
     res.status(500).json("Server Error");

@@ -80,6 +80,12 @@ const EquipementsList = () => {
 
   const handleDelete = async (e, id) => {
     e.stopPropagation();
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir supprimer cet équipement ?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
     try {
       const response = await fetch(
         `http://localhost:4000/equipements/delete/${id}`,
@@ -139,7 +145,7 @@ const EquipementsList = () => {
             onChange={(e) => setSearch(e.target.value)}
             type="text"
             className="form-control w-100"
-            placeholder="Recherche par Modele"
+            placeholder="Recherche par Modele ou SN"
           />
         </div>
         <div className="col-auto ms-3">
@@ -228,7 +234,9 @@ const EquipementsList = () => {
                         className={
                           equipement.etat === "Actif"
                             ? "btn btn-success"
-                            : "btn btn-danger"
+                            : equipement.etat === "En panne"
+                            ? "btn btn-danger"
+                            : "btn btn-warning"
                         }
                       >
                         {equipement.etat}

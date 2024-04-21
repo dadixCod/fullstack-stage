@@ -4,13 +4,13 @@
     top: 0;
     height: 100vh;
     background-color: #012030;
-    border-radius: 5px;
+    border-radius: 0 10px 10px 0px;
   }
   
   #sidebarCollapse {
     position: absolute;
     top: 0.5rem;
-    right: 1.3rem;
+    right: 2rem;
   }
   
   #sidebar {
@@ -20,12 +20,12 @@
   }
   
   #sidebar ul li a {
-    margin-left: 0.5rem;
+    margin-left: 0.7rem;
     color: #e9e9ea;
   }
   
   #sidebar .list-item {
-    margin: 2rem 0;
+    margin: 1.5rem 0;
     font-size: 15px;
     font-weight: 600;
   }
@@ -40,14 +40,14 @@
   }
   
   .btn-custom {
-    background-color: #c4b9b9;
+    /* background-color: #c4b9b9; */
     border-radius: 50%;
-    color: #215cad;
+    color: white;
     font-weight: 600;
   }
   
   .sidebar-header {
-    margin-top: 3rem;
+    margin-top: 2.5rem;
     text-align: center;
     color: #e9e9ea;
   }

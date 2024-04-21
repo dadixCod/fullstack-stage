@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const AddBureauForm = () => {
+const AddBureauForm = ({ fetchBureaux }) => {
   const [bureau, setBureau] = useState("");
   const onSubmitForm = async (e) => {
     e.preventDefault();
@@ -16,6 +16,7 @@ const AddBureauForm = () => {
       });
       const parseData = await response.json();
       if (parseData.newBureau) {
+        fetchBureaux();
         toast.success(parseData.message);
         setBureau("");
       } else {

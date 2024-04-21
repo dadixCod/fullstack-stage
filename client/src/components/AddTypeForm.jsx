@@ -1,20 +1,9 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const AddTypeForm = ({ setTypes }) => {
+const AddTypeForm = ({ fetchTypes }) => {
   const [type, setType] = useState("");
-  async function fetchTypes() {
-    try {
-      const response = await fetch(`http://localhost:4000/types`, {
-        method: "GET",
-        headers: { "Content-Type": "application/json" },
-      });
-      const parseData = await response.json();
-      setTypes(parseData);
-    } catch (error) {
-      console.error(error.message);
-    }
-  }
+
   const onSubmitForm = async (e) => {
     e.preventDefault();
     try {
@@ -28,9 +17,9 @@ const AddTypeForm = ({ setTypes }) => {
       });
       const parseData = await response.json();
       if (parseData.newType) {
+        fetchTypes();
         toast.success(parseData.message);
         setType("");
-        fetchTypes();
       } else {
         toast.error(parseData.message);
       }

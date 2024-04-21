@@ -57,6 +57,9 @@ const PrintableStatistiques = () => {
               <th scope="col" className="text-center">
                 En panne
               </th>
+              <th scope="col" className="text-center">
+                En Reforme
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -68,6 +71,7 @@ const PrintableStatistiques = () => {
                     <td className="text-center">{equipement.quantity}</td>
                     <td className="text-center">{equipement.actif}</td>
                     <td className="text-center">{equipement.enpanne}</td>
+                    <td className="text-center">{equipement.enreforme}</td>
                   </tr>
                 );
               })}

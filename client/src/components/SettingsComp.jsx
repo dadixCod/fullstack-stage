@@ -3,6 +3,7 @@ import TypesRow from "./TypesRow";
 
 import ServicesRow from "./ServicesRow";
 import SousDirectionsRow from "./SousDirectionsRow";
+import BureauxRow from "./BureauxRow";
 
 const SettingsComp = () => {
   return (
@@ -10,7 +11,8 @@ const SettingsComp = () => {
       <h1 className="text-center mb-1">Paramètres</h1>
       <TypesRow></TypesRow>
       <ServicesRow></ServicesRow>
-      <SousDirectionsRow ></SousDirectionsRow>
+      <SousDirectionsRow></SousDirectionsRow>
+      <BureauxRow></BureauxRow>
     </div>
   );
 };

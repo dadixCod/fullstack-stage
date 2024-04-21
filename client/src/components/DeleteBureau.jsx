@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const DeleteType = ({ types, fetchTypes }) => {
-  const [type, setType] = useState("Type");
+const DeleteBureau = ({ bureaux, fetchBureaux }) => {
+  const [bureau, setBureau] = useState("Bureau");
 
-  async function deleteType(id) {
+  async function deleteBureau(id) {
     try {
-      const response = await fetch(`http://localhost:4000/types/delete/${id}`, {
-        method: "DELETE",
-        headers: { "Content-type": "application/json" },
-      });
-      fetchTypes();
+      const response = await fetch(
+        `http://localhost:4000/bureaux/delete/${id}`,
+        {
+          method: "DELETE",
+          headers: { "Content-type": "application/json" },
+        }
+      );
+      fetchBureaux();
       const parseData = await response.json();
-      toast.success(parseData.message);
+      toast.success(parseData);
     } catch (error) {
       console.error(error);
     }
@@ -22,16 +25,16 @@ const DeleteType = ({ types, fetchTypes }) => {
     <div className="d-flex justify-content-between align-items-center">
       <div
         className="modal fade"
-        id="deleType"
+        id="deleteBureauForm"
         tabIndex="-1"
-        aria-labelledby="deleTypeLabel"
+        aria-labelledby="deleteBureauFormLabel"
         aria-hidden="true"
       >
         <div className="modal-dialog">
           <div className="modal-content">
             <div className="modal-header">
-              <h1 className="modal-title fs-5" id="deleType">
-                Supprimer un type
+              <h1 className="modal-title fs-5" id="deleteBureauForm">
+                Supprimer un bureau
               </h1>
               <button
                 type="button"
@@ -46,19 +49,22 @@ const DeleteType = ({ types, fetchTypes }) => {
                   <div className="col">
                     <div className="form-group">
                       <label className="mb-2" htmlFor="modele">
-                        Type
+                        Bureau
                       </label>
                       <select
                         className="form-select"
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
+                        value={bureau}
+                        onChange={(e) => setBureau(e.target.value)}
                       >
-                        <option disabled>Type</option>
-                        {types &&
-                          types.map((type) => {
+                        <option disabled>Bureau</option>
+                        {bureaux &&
+                          bureaux.map((bureau) => {
                             return (
-                              <option key={type.id_type} value={type.id_type}>
-                                {type.type}
+                              <option
+                                key={bureau.id_bureau}
+                                value={bureau.id_bureau}
+                              >
+                                {bureau.bureau}
                               </option>
                             );
                           })}
@@ -77,7 +83,7 @@ const DeleteType = ({ types, fetchTypes }) => {
                 Fermer
               </button>
               <button
-                onClick={(e) => deleteType(type)}
+                onClick={(e) => deleteBureau(bureau)}
                 data-bs-dismiss="modal"
                 type="button"
                 className="btn btn-danger"
@@ -92,4 +98,4 @@ const DeleteType = ({ types, fetchTypes }) => {
   );
 };
 
-export default DeleteType;
+export default DeleteBureau;

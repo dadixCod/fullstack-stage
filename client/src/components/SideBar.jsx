@@ -11,6 +11,7 @@ import EquipementComp from "./EquipementComp";
 import AffectationComp from "./AffectationComp";
 import StatistiquesComp from "./StatistiquesComp";
 import SettingsComp from "./SettingsComp";
+import ReformeComp from "./ReformeComp";
 
 const SideBar = ({ onItemClick, onCrossClicked, setAuth }) => {
   const [isNotActive, setNotActive] = useState(false);
@@ -92,13 +93,20 @@ const SideBar = ({ onItemClick, onCrossClicked, setAuth }) => {
               isActive={activeItem === "Affectation"}
             />
             <ListItem
+              text="Reforme"
+              icon="bi bi-box"
+              component={<ReformeComp />}
+              onItemClick={handleItemClick}
+              isActive={activeItem === "Reforme"}
+            />
+            <ListItem
               text="Paramètres"
               icon="bi bi-gear-fill"
               component={<SettingsComp />}
               onItemClick={handleItemClick}
               isActive={activeItem === "Paramètres"}
             />
-            <hr className="sidebar-divider" />
+            <hr className="sidebar-divider " />
             <ListItem
               text="Logout"
               icon="bi bi-box-arrow-right"

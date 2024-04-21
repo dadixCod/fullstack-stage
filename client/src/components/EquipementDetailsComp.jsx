@@ -8,11 +8,13 @@ import {
   MDBCardText,
   MDBCardBody,
 } from "mdb-react-ui-kit";
+import { toast } from "react-toastify";
 
 const EquipementDetailsComp = () => {
   const { id } = useParams();
 
   const [equipement, setEquipement] = useState("");
+  const [isOlderThanFiveYears, setIsOlderThanFiveYears] = useState(null);
 
   async function fetchEquipement() {
     try {
@@ -31,9 +33,53 @@ const EquipementDetailsComp = () => {
     }
   }
 
+  const addToReforme = async (e, selectedEquipement) => {
+    e.preventDefault();
+
+    try {
+      const body = {
+        num_inventaire: id,
+        sn: selectedEquipement.sn,
+        modele: selectedEquipement.modele,
+        id_type: selectedEquipement.id_type,
+        dateaquisition: selectedEquipement.dateaquisition,
+        datereforme: new Date(),
+      };
+      const response = await fetch("http://localhost:4000/reformes/add", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const parseData = await response.json();
+      if (parseData.created) {
+        fetchEquipement();
+        toast.success(parseData.message);
+      } else {
+        toast.error("Erreur");
+      }
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const checkIfOlderThanFiveYears = () => {
+    const currentDate = moment();
+
+    const acquisitionDate = moment(equipement.dateaquisition);
+
+    const yearsDifference = currentDate.diff(acquisitionDate, "years");
+
+    const isOlder = yearsDifference >= 5;
+    setIsOlderThanFiveYears(isOlder);
+    console.log(isOlder);
+  };
+
   useEffect(() => {
     fetchEquipement();
   }, []);
+  useEffect(() => {
+    checkIfOlderThanFiveYears();
+  }, [equipement]);
   return (
     <div>
       <h2 className="text-center mt-3">Détails</h2>
@@ -134,18 +180,31 @@ const EquipementDetailsComp = () => {
             <MDBCol sm="3">
               <MDBCardText>Etat</MDBCardText>
             </MDBCol>
-            <MDBCol sm="9">
-              <MDBCardText className="text-muted">
-                <div
-                  className={
-                    equipement.etat === "Actif"
-                      ? "btn btn-success"
-                      : "btn btn-danger"
-                  }
-                >
-                  {equipement.etat}
-                </div>
+            <MDBCol
+              className="d-flex justify-content-between align-items-center"
+              sm="9"
+            >
+              <MDBCardText
+                className={
+                  equipement.etat === "Actif"
+                    ? "btn btn-success fw-semibold"
+                    : equipement.etat === "En panne"
+                    ? "btn btn-danger fw-semibold"
+                    : "btn btn-warning fw-semibold"
+                }
+              >
+                {equipement.etat}
               </MDBCardText>
+              {isOlderThanFiveYears && equipement.etat !== "En reforme" ? (
+                <MDBCardText
+                  onClick={(e) => addToReforme(e, equipement)}
+                  className="col-auto btn btn-primary "
+                >
+                  Mettre en reforme
+                </MDBCardText>
+              ) : (
+                <></>
+              )}
             </MDBCol>
           </MDBRow>
         </MDBCardBody>

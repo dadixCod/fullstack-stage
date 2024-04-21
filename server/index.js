@@ -45,6 +45,9 @@ app.use("/statistiques", require("./routes/statistiques"));
 //Maintenance route
 app.use("/maintenance", require("./routes/maintenance"));
 
+//Reformes route
+app.use("/reformes", require("./routes/reformes"));
+
 const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server started on port : ${port}`);

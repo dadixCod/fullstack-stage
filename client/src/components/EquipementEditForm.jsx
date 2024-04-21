@@ -105,7 +105,7 @@ const EquipementEditForm = () => {
   };
   useEffect(() => {
     fetchTypes();
-  }, [types]);
+  }, []);
   useEffect(() => {
     fetchEtats();
   }, []);
@@ -118,7 +118,7 @@ const EquipementEditForm = () => {
 
   return (
     <div className="card mx-auto my-4 shadow" style={{ width: 600 }}>
-      <AddTypeForm />
+      <AddTypeForm fetchTypes={fetchTypes}/>
       <form onSubmit={onSubmitForm} className="mx-3">
         <div className="row my-3">
           <div className="col">

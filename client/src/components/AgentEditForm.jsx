@@ -8,7 +8,7 @@ const AgentEditForm = () => {
   let navigate = useNavigate();
   const [directions, setDirections] = useState([]);
   const [services, setServices] = useState([]);
-  
+
   const [selectedSousdirection, setSelectedSousdirection] = useState("");
   const [bureuax, setBureaux] = useState([]);
   const [selectedBureau, setSelectedBureau] = useState("");
@@ -122,7 +122,7 @@ const AgentEditForm = () => {
   }, []);
   useEffect(() => {
     fetchBureaux();
-  }, [bureuax]);
+  }, []);
   useEffect(() => {}, [selectedBureau]);
   useEffect(() => {}, [selectedSousdirection]);
   useEffect(() => {
@@ -131,7 +131,7 @@ const AgentEditForm = () => {
 
   return (
     <div className="card mx-auto my-4 shadow" style={{ width: 600 }}>
-      <AddBureauForm></AddBureauForm>
+      <AddBureauForm fetchBureaux={fetchBureaux} />
       <form onSubmit={onSubmitForm} className="mx-3">
         <div className="row my-3">
           <div className="col">
