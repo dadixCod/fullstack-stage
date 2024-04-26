@@ -4,7 +4,7 @@ const pool = require("../db");
 router.get("", async (req, res) => {
   try {
     const affectations = await pool.query(
-      "SELECT num_affectation,num_inventaire,sn,modele,types.type,agents.nom,agents.prenom,dateaffectation FROM affectation JOIN types ON affectation.id_type = types.id_type JOIN agents ON affectation.id_agent = agents.id_agent ORDER BY num_affectation ASC"
+      "SELECT num_affectation,num_inventaire,sn,modele,types.type,agents.nom,agents.prenom,dateaffectation FROM affectation LEFT JOIN types ON affectation.id_type = types.id_type LEFT JOIN agents ON affectation.id_agent = agents.id_agent ORDER BY num_affectation ASC"
     );
     console.log("Affectation called");
     res.status(200).json(affectations.rows);
@@ -92,21 +92,35 @@ router.put("/edit/:num_affectation", async (req, res) => {
   }
 });
 
+router.put("/undoaffect/:num_affectation", async (req, res) => {
+  const { num_affectation } = req.params;
+  try {
+    const { num_inventaire } = req.body;
+    const deletedEquipementAffected = await pool.query(
+      "UPDATE equipement SET id_agent = NULL , dateaffectation = NULL WHERE num_inventaire = $1 RETURNING *",
+      [num_inventaire]
+    );
+    const updateAffectation = await pool.query(
+      "UPDATE affectation SET id_agent = NULL , dateaffectation = NULL WHERE num_affectation = $1 RETURNING *",
+      [num_affectation]
+    );
+    res.json({
+      message: "Affectation anullée avec succès",
+    });
+  } catch (error) {
+    console.error(error.message);
+  }
+});
 //delete affectation
 
 router.delete("/delete/:num_affectation", async (req, res) => {
   const { num_affectation } = req.params;
   try {
-    const { num_inventaire } = req.body;
     const response = await pool.query(
       "DELETE FROM affectation WHERE num_affectation = $1",
       [num_affectation]
     );
-
-    const deletedEquipementAffected = await pool.query(
-      "UPDATE equipement SET id_agent = NULL , dateaffectation = NULL WHERE num_inventaire = $1 RETURNING *",
-      [num_inventaire]
-    );
+    console.log("Delete called");
 
     res.json({
       message: "Affectation supprimée avec succès",

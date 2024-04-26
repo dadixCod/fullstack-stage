@@ -147,12 +147,12 @@ router.put("/update/:id", async (req, res) => {
   const { id } = req.params;
   try {
     //1. destructure body
-    const { sn, modele, id_type, valeur, dateaquisition, id_etat } = req.body;
+    const { sn, modele, id_type, valeur, dateaquisition } = req.body;
 
-    if ((sn, modele && id_type && valeur && dateaquisition && id_etat)) {
+    if ((sn, modele && id_type && valeur && dateaquisition)) {
       const updatedEquipement = await pool.query(
-        "UPDATE equipement  SET sn = $1, modele = $2 , id_type = $3 ,valeur = $4 ,dateaquisition = $5,id_etat=$6 WHERE num_inventaire = $7 RETURNING *",
-        [sn, modele, id_type, valeur, dateaquisition, id_etat, id]
+        "UPDATE equipement  SET sn = $1, modele = $2 , id_type = $3 ,valeur = $4 ,dateaquisition = $5 WHERE num_inventaire = $6 RETURNING *",
+        [sn, modele, id_type, valeur, dateaquisition, id]
       );
 
       res.status(200).json({

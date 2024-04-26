@@ -9,7 +9,7 @@ const EquipementEditForm = () => {
   const { id } = useParams();
   let navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [selectedEtat, setSelectedEtat] = useState("Etat");
+
   const [etats, setEtats] = useState([]);
 
   const [selectedType, setSelectedType] = useState("Type");
@@ -36,7 +36,6 @@ const EquipementEditForm = () => {
       });
       setSelectedType(equipement.id_type);
       setSelectedDate(new Date(equipement.dateaquisition));
-      setSelectedEtat(equipement.id_etat);
     } catch (error) {
       console.error(error.message);
     }
@@ -82,7 +81,6 @@ const EquipementEditForm = () => {
         valeur,
         id_type: selectedType,
         dateaquisition: adjustedDate,
-        id_etat: selectedEtat,
       };
       const response = await fetch(
         `http://localhost:4000/equipements/update/${id}`,
@@ -118,7 +116,7 @@ const EquipementEditForm = () => {
 
   return (
     <div className="card mx-auto my-4 shadow" style={{ width: 600 }}>
-      <AddTypeForm fetchTypes={fetchTypes}/>
+      <AddTypeForm fetchTypes={fetchTypes} />
       <form onSubmit={onSubmitForm} className="mx-3">
         <div className="row my-3">
           <div className="col">
@@ -209,36 +207,14 @@ const EquipementEditForm = () => {
               <label className="mb-2" htmlFor="dateacq">
                 Date d'acquisition
               </label>
-
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                className="form-control"
-                dateFormat="yyyy-MM-dd"
-              />
-            </div>
-          </div>
-          <div className="col">
-            <div className="form-group">
-              <label className="mb-2" htmlFor="etat">
-                Etat
-              </label>
-              <select
-                value={selectedEtat}
-                onChange={(e) => setSelectedEtat(e.target.value)}
-                className="form-select"
-                name="etat"
-              >
-                <option disabled>Etat</option>
-                {etats &&
-                  etats.map((etat) => {
-                    return (
-                      <option key={etat.id_etat} value={etat.id_etat}>
-                        {etat.etat}
-                      </option>
-                    );
-                  })}
-              </select>
+              <div className="form-grou">
+                <DatePicker
+                  selected={selectedDate}
+                  onChange={(date) => setSelectedDate(date)}
+                  className="form-control"
+                  dateFormat="yyyy-MM-dd"
+                />
+              </div>
             </div>
           </div>
         </div>

@@ -57,11 +57,32 @@ const AffectationComp = () => {
         }
       );
       const parseData = await response.json();
-      setAffectations(
-        affectations.filter((affectation) => {
-          return affectation.num_affectation !== num_affectation;
-        })
+      fetchAffectations();
+      toast.success(parseData.message);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+  const handleUndoClick = async (e, num_affectation, num_inventaire) => {
+    e.preventDefault();
+    const confirmDelete = window.confirm(
+      "Êtes-vous sûr de vouloir annuler cette affectation ?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
+    const body = { num_inventaire };
+    try {
+      const response = await fetch(
+        `http://localhost:4000/affectation/undoaffect/${num_affectation}`,
+        {
+          method: "PUT",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(body),
+        }
       );
+      const parseData = await response.json();
+      fetchAffectations();
       toast.success(parseData.message);
     } catch (error) {
       console.error(error.message);
@@ -87,6 +108,7 @@ const AffectationComp = () => {
             <th scope="col">Date d'affectation</th>
             <th scope="col">Imprimer</th>
             <th scope="col">Editer</th>
+            <th scope="col">Annuler L'affectation</th>
             <th scope="col">Supprimer</th>
           </tr>
         </thead>
@@ -107,9 +129,15 @@ const AffectationComp = () => {
                   <td scope="col">{affectation.sn}</td>
                   <td scope="col">{affectation.modele}</td>
                   <td scope="col">{affectation.type}</td>
-                  <td scope="col">{`${affectation.nom} ${affectation.prenom}`}</td>
-                  <td scope="col">
-                    {moment(affectation.dateaffectation).format("YYYY-MM-DD")}
+                  <td scope="col" className={affectation.dateaffectation ? '' : 'text-warning'}>
+                    {affectation.dateaffectation
+                      ? `${affectation.nom} ${affectation.prenom}`
+                      : "Affectation Annulée"}
+                  </td>
+                  <td scope="col" className={affectation.dateaffectation ? '' : 'text-warning'}>
+                    {affectation.dateaffectation
+                      ? moment(affectation.dateaffectation).format("YYYY-MM-DD")
+                      : "Affectation Annulée"}
                   </td>
                   <td>
                     <button
@@ -129,6 +157,21 @@ const AffectationComp = () => {
                       }
                     >
                       <i className="bi bi-pencil-square"></i>
+                    </button>
+                  </td>
+                  <td scope="col">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={(e) =>
+                        handleUndoClick(
+                          e,
+                          affectation.num_affectation,
+                          affectation.num_inventaire
+                        )
+                      }
+                    >
+                      <i className="bi bi-arrow-counterclockwise"></i>
                     </button>
                   </td>
                   <td>

@@ -3,12 +3,17 @@ import { toast } from "react-toastify";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
-const AddEquipementForm = ({ fetchEquipements, fetchTypes, types ,fetchEtats,etats}) => {
-  
+const AddEquipementForm = ({
+  fetchEquipements,
+  fetchTypes,
+  types,
+  fetchEtats,
+  etats,
+}) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   const [selectedType, setSelectedType] = useState("Type");
-  const [selectedEtat, setSelectedEtat] = useState("Etat");
+
   const [type, setType] = useState("");
   const [addTypeClicked, setAddTypeClicked] = useState(false);
   const onSubmitType = async (e) => {
@@ -46,7 +51,6 @@ const AddEquipementForm = ({ fetchEquipements, fetchTypes, types ,fetchEtats,eta
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
-
   // const handleDateChange = (date) => {
   //   setSelectedDate(date);
   // };
@@ -60,7 +64,7 @@ const AddEquipementForm = ({ fetchEquipements, fetchTypes, types ,fetchEtats,eta
         id_type: selectedType,
         dateaquisition: selectedDate,
         valeur,
-        id_etat: selectedEtat,
+        id_etat: 1,
       };
       const response = await fetch(`http://localhost:4000/equipements/add`, {
         method: "POST",
@@ -76,7 +80,7 @@ const AddEquipementForm = ({ fetchEquipements, fetchTypes, types ,fetchEtats,eta
           modele: "",
           valeur: "",
         });
-        setSelectedEtat("Etat");
+
         setSelectedType("Type");
       } else {
         toast.error(parseData.message);
@@ -232,27 +236,6 @@ const AddEquipementForm = ({ fetchEquipements, fetchTypes, types ,fetchEtats,eta
                           dateFormat="yyyy-MM-dd"
                         />
                       </div>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="form-group">
-                      <label htmlFor="etat">Etat</label>
-                      <select
-                        value={selectedEtat}
-                        onChange={(e) => setSelectedEtat(e.target.value)}
-                        className="form-select"
-                        name="etat"
-                      >
-                        <option disabled>Etat</option>
-                        {etats &&
-                          etats.map((etat) => {
-                            return (
-                              <option key={etat.id_etat} value={etat.id_etat}>
-                                {etat.etat}
-                              </option>
-                            );
-                          })}
-                      </select>
                     </div>
                   </div>
                 </div>
