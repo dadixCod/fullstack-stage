@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import AddBureauForm from "./AddBureauForm";
 
+
 const AgentEditForm = () => {
   const { id } = useParams();
   let navigate = useNavigate();
@@ -132,6 +133,7 @@ const AgentEditForm = () => {
   return (
     <div className="card mx-auto my-4 shadow" style={{ width: 600 }}>
       <AddBureauForm fetchBureaux={fetchBureaux} />
+      
       <form onSubmit={onSubmitForm} className="mx-3">
         <div className="row my-3">
           <div className="col">
